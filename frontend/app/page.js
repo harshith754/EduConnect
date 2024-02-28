@@ -1,12 +1,17 @@
-import Navbar from "@/components/Navbar";
-import { Button } from "@/components/ui/button";
+import LoginForm from "@/components/LoginForm";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "./api/auth/[...nextauth]/route";
 
-export default function Home() {
+export default async function Home() {
+  const session = await getServerSession(authOptions);
+
+  if (session) redirect("/dashboard");
+
   return (
     <main className="w-full min-h-screen flex flex-col justify-start items-center ">
-      <Navbar />
-      <div className>Hello World</div>
-      <Button>Click me</Button>
+      {/* <Navbar /> */}
+      <LoginForm />
     </main>
   );
 }

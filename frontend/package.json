@@ -9,11 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@prisma/client": "^5.10.2",
     "@radix-ui/react-slot": "^1.0.2",
+    "axios": "^1.6.7",
+    "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "lucide-react": "^0.339.0",
     "next": "14.1.0",
+    "next-auth": "^4.24.6",
     "react": "^18",
     "react-dom": "^18",
     "tailwind-merge": "^2.2.1",
@@ -24,6 +28,8 @@
     "eslint": "^8",
     "eslint-config-next": "14.1.0",
     "postcss": "^8",
+    "prettier": "3.2.5",
+    "prisma": "^5.10.2",
     "tailwindcss": "^3.3.0"
   }
 }
