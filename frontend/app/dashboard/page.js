@@ -2,31 +2,41 @@
 
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
+import { useSideBarContext } from "@/context/context";
 import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
+import PersonalInformation from "@/components/PersonalInformation";
+import ProfessionalDetails from "@/components/ProfessionalDetails";
+import ResearchAndPublications from "@/components/ResearchAndPublications";
+import FinancialSupport from "@/components/FinancialSupport";
+import InstitutionalResearchFunding from "@/components/InstitutionalResearchFunding";
 
 export default function UserInfo() {
   const { data: session } = useSession();
+  const { selectedTab, handleAccordionClick } = useSideBarContext();
+
+  // Function to render the component based on the selectedTab
+  const renderTabContent = () => {
+    switch (selectedTab) {
+      case "personal-information":
+        return <PersonalInformation />;
+      case "professional-details":
+        return <ProfessionalDetails />;
+      case "research-and-publications":
+        return <ResearchAndPublications />;
+      case "financial-support":
+        return <FinancialSupport />;
+      case "institutional-research-funding":
+        return <InstitutionalResearchFunding />;
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-screen overflow-y-auto">
       <Navbar />
-      <div className="grid place-items-center h-screen">
-        <div className="shadow-lg p-8 bg-zince-300/10 flex flex-col gap-2 my-6">
-          <div>
-            Name: <span className="font-bold">{session?.user?.name}</span>
-          </div>
-          <div>
-            Email: <span className="font-bold">{session?.user?.email}</span>
-          </div>
-          <Button
-            onClick={() => signOut()}
-            className=" text-white font-bold px-6 py-2 mt-3"
-          >
-            Log Out
-          </Button>
-        </div>
-      </div>
+      {renderTabContent()}
     </div>
   );
 }
