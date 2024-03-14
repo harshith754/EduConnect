@@ -7,7 +7,7 @@ const SideBarContext = createContext();
 export const useSideBarContext = () => useContext(SideBarContext);
 
 export const SideBarProvider = ({ children }) => {
-  const [selectedTab, setSelectedTab] = useState("personal-information");
+  const [selectedTab, setSelectedTab] = useState("");
 
   const handleAccordionClick = (value) => {
     setSelectedTab(value);

@@ -30,6 +30,7 @@ export const authOptions = {
             return null;
           }
 
+          // console.log(existingUser);
           return {
             id: `${existingUser.id}`,
             name: existingUser.name,

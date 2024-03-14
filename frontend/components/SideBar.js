@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 import React, { useState } from "react";
 import {
@@ -36,7 +36,7 @@ const SideBar = () => {
         </Badge>
       </div>
 
-      <div className="mt-4 text-sm p-4 flex flex-col divide-y divide-primary-foreground">
+      <div className="mt-4 text-sm p-4 flex flex-col divide-y ">
         {/* <div className="p-2">Profile</div>
         <div className="p-2">Educational Details</div>
         <div className="p-2">Professional Certifications/FDPs</div>
@@ -80,18 +80,58 @@ const SideBar = () => {
                 Research and Publications
               </div>
               <div
+                className={`p-2 ${selectedTab === "patents-registered" ? "font-bold" : ""}`}
+                onClick={() => handleAccordionClick("patents-registered")}
+              >
+                Patents registered
+              </div>
+              <div
                 className={`p-2 ${selectedTab === "financial-support" ? "font-bold" : ""}`}
                 onClick={() => handleAccordionClick("financial-support")}
               >
                 Financial Support and Development Programs
               </div>
               <div
-                className={`p-2 ${selectedTab === "institutional-research-funding" ? "font-bold" : ""}`}
-                onClick={() =>
-                  handleAccordionClick("institutional-research-funding")
-                }
+                className={`p-2 ${selectedTab === "teachers-fdp" ? "font-bold" : ""}`}
+                onClick={() => handleAccordionClick("teachers-fdp")}
               >
-                Institutional Research Funding
+                Teachers Undergoing FDPs/MDPs
+              </div>
+              <div
+                className={`p-2 ${selectedTab === "granted-fellowship" ? "font-bold" : ""}`}
+                onClick={() => handleAccordionClick("granted-fellowship")}
+              >
+                Granted National/International Fellowship/Financial Support
+              </div>
+              <div
+                className={`p-2 ${selectedTab === "consultancy-revenue" ? "font-bold" : ""}`}
+                onClick={() => handleAccordionClick("consultancy-revenue")}
+              >
+                Consultancy and Corporate Training Revenue
+              </div>
+              <div
+                className={`p-2 ${selectedTab === "appreciation-awards" ? "font-bold" : ""}`}
+                onClick={() => handleAccordionClick("appreciation-awards")}
+              >
+                Appreciation and Awards
+              </div>
+              <div
+                className={`p-2 ${selectedTab === "committee-details" ? "font-bold" : ""}`}
+                onClick={() => handleAccordionClick("committee-details")}
+              >
+                Institutional and Department Committee Details
+              </div>
+              <div
+                className={`p-2 ${selectedTab === "lecture-details" ? "font-bold" : ""}`}
+                onClick={() => handleAccordionClick("lecture-details")}
+              >
+                Guest Lecture/Expert Lecture Delivered
+              </div>
+              <div
+                className={`p-2 ${selectedTab === "activities-details" ? "font-bold" : ""}`}
+                onClick={() => handleAccordionClick("activities-details")}
+              >
+                Co-curricular/Extracurricular Activities
               </div>
             </AccordionContent>
           </AccordionItem>

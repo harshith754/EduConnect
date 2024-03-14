@@ -58,6 +58,7 @@ const ProfessionalDetails = () => {
         <Label>Designation:</Label>
         <Input
           type="text"
+          placeholder="Designation"
           value={designation}
           onChange={(e) => setDesignation(e.target.value)}
         />
@@ -65,6 +66,7 @@ const ProfessionalDetails = () => {
         <Label>Department:</Label>
         <Input
           type="text"
+          placeholder="Department"
           value={department}
           onChange={(e) => setDepartment(e.target.value)}
         />
@@ -72,6 +74,7 @@ const ProfessionalDetails = () => {
         <Label>Date of Joining:</Label>
         <Input
           type="text"
+          placeholder="Date of Joining"
           value={dateOfJoining}
           onChange={(e) => setDateOfJoining(e.target.value)}
         />
@@ -79,6 +82,7 @@ const ProfessionalDetails = () => {
         <Label>Highest Qualification:</Label>
         <Input
           type="text"
+          placeholder="Highest Qualification"
           value={highestQualification}
           onChange={(e) => setHighestQualification(e.target.value)}
         />
@@ -86,6 +90,7 @@ const ProfessionalDetails = () => {
         <Label>Total Years of Teaching Experience:</Label>
         <Input
           type="text"
+          placeholder="Total Years of Teaching Experience"
           value={totalYearsOfTeachingExperience}
           onChange={(e) => setTotalYearsOfTeachingExperience(e.target.value)}
         />
@@ -93,15 +98,7 @@ const ProfessionalDetails = () => {
         <Label>Total Years of Teaching Experience (In Institute):</Label>
         <Input
           type="text"
-          value={totalYearsOfTeachingExperienceInInstitute}
-          onChange={(e) =>
-            setTotalYearsOfTeachingExperienceInInstitute(e.target.value)
-          }
-        />
-
-        <Label>Total Years of Teaching Experience (In Institute):</Label>
-        <Input
-          type="text"
+          placeholder="Total Years of Teaching Experience (In Institute)"
           value={totalYearsOfTeachingExperienceInInstitute}
           onChange={(e) =>
             setTotalYearsOfTeachingExperienceInInstitute(e.target.value)

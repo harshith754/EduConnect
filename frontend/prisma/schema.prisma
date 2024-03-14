@@ -15,14 +15,26 @@ datasource db {
 
 
 model User {
-
-  id      Int      @id @default(autoincrement())
-  email   String   @unique
-  name    String
-  password String
-  //regular or admin
-  role      String   @default("regular")  
-  createdAt DateTime @default(now())
-  updateAt DateTime @updatedAt
-
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  name          String
+  password      String
+  role          String    @default("regular")  
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  profile       Profile?
 }
+
+model Profile {
+  id            Int       @id @default(autoincrement())
+  userId        Int       @unique
+  user          User      @relation(fields: [userId], references: [id])
+  fullName      String?
+  gender        String?
+  dateOfBirth   DateTime?
+  email         String?
+  mobileNumber  String?
+  aadharDetails String?
+  facultyId     String?
+}
+
