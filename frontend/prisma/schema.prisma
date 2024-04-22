@@ -13,28 +13,91 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id            Int       @id @default(autoincrement())
-  email         String    @unique
-  name          String
-  password      String
-  role          String    @default("regular")  
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  profile       Profile?
+  id                  Int                  @id @default(autoincrement())
+  email               String               @unique
+  name                String
+  password            String
+  role                String               @default("regular")
+  createdAt           DateTime?            @default(now())
+  updatedAt           DateTime?            @updatedAt
+  personalDetails     PersonalDetails?
+  professionalDetails ProfessionalDetails?
+  booksPublished      BooksPublished?
+  patentsRegistered   PatentsRegistered?
 }
 
-model Profile {
-  id            Int       @id @default(autoincrement())
-  userId        Int       @unique
-  user          User      @relation(fields: [userId], references: [id])
+model PersonalDetails {
+  id            Int     @id @default(autoincrement())
+  user          User    @relation(fields: [email], references: [email])
   fullName      String?
   gender        String?
-  dateOfBirth   DateTime?
-  email         String?
+  dateOfBirth   String?
+  email         String  @unique
   mobileNumber  String?
   aadharDetails String?
   facultyId     String?
+  bloodGroup    String?
 }
 
+model ProfessionalDetails {
+  id                        Int                        @id @default(autoincrement())
+  user                      User                       @relation(fields: [email], references: [email])
+  email                     String                     @unique
+  department                String?
+  designation               String?
+  dateOfJoining             String?
+  highestQualification      String?
+  teachingExperience        String?
+  instituteExperience       String?
+  educationalQualifications EducationalQualification[]
+  recognizedAsResearchGuide String?
+  yearOfRecognition         String?
+}
+
+model EducationalQualification {
+  id                    Int                  @id @default(autoincrement())
+  degree                String?
+  institute             String?
+  yearOfCompletion      String?
+  ProfessionalDetails   ProfessionalDetails? @relation(fields: [professionalDetailsId], references: [id])
+  professionalDetailsId Int?
+}
+
+model BooksPublished {
+  id    Int    @id @default(autoincrement())
+  user  User   @relation(fields: [email], references: [email])
+  email String @unique
+  books Book[]
+}
+
+model PatentsRegistered {
+  id      Int      @id @default(autoincrement())
+  user    User     @relation(fields: [email], references: [email])
+  email   String   @unique
+  patents Patent[]
+}
+
+model Book {
+  id                Int             @id @default(autoincrement())
+  title             String?
+  publishers        String?
+  yearOfPublication String?
+  dateOfPublication String?
+  BooksPublished    BooksPublished? @relation(fields: [booksPublishedId], references: [id])
+  booksPublishedId  Int?
+}
+
+model Patent {
+  id                  Int                @id @default(autoincrement())
+  type                String?
+  applicationNo       String?
+  title               String?
+  publicationDate     String?
+  formFillingDate     String?
+  authorList          String?
+  publishedYear       String?
+  faculty             String?
+  PatentsRegistered   PatentsRegistered? @relation(fields: [patentsRegisteredId], references: [id])
+  patentsRegisteredId Int?
+}

@@ -7,47 +7,83 @@ import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+
+import { toast } from "sonner";
 import axios, { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const PersonalInformation = () => {
   // State for form fields
   const [fullName, setFullName] = useState("");
   const [gender, setGender] = useState("");
   const [dateOfBirth, setDateOfBirth] = useState();
-  const [email, setEmail] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
   const [aadharDetails, setAadharDetails] = useState("");
-  const [aadharNumber, setAadharNumber] = useState("");
   const [facultyId, setFacultyId] = useState("");
+  const [bloodGroup, setBloodGroup] = useState(""); // Add blood group state
+  const [formEditable, setFormEditable] = useState(true);
 
   const { data: session } = useSession();
-
-  // console.log(session.user);
+  console.log(session.user.email);
   // Function to handle form submission
+
+  useEffect(() => {
+    getPersonalDetails();
+    toast("Info loaded");
+  }, []);
+
+  const getPersonalDetails = async () => {
+    const { data } = await axios.get(
+      `/api/personal-details/${session.user.email}`,
+    );
+
+    console.log(data.personalDetails);
+    if (data && data.personalDetails) {
+      setFullName(data.personalDetails.fullName);
+      setGender(data.personalDetails.gender);
+      setDateOfBirth(data.personalDetails.dateOfBirth);
+      setAadharDetails(data.personalDetails.aadharDetails);
+      setBloodGroup(data.personalDetails.bloodGroup);
+      setFacultyId(data.personalDetails.facultyId);
+      setMobileNumber(data.personalDetails.mobileNumber);
+      setFormEditable(false);
+    }
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     // Add your logic for form submission here
+
     console.log("Form submitted:", {
       fullName,
       gender,
-      dateOfBirth,
-      email,
+      dateOfBirth: dateOfBirth,
+      email: session.user.email,
       mobileNumber,
       aadharDetails,
       facultyId,
+      bloodGroup,
     });
 
-    axios.post("/api/personal-information", {
+    axios.post("/api/personal-details", {
       fullName,
       gender,
-      dateOfBirth,
-      email,
+      dateOfBirth: dateOfBirth,
+      email: session.user.email,
       mobileNumber,
       aadharDetails,
       facultyId,
+      bloodGroup,
     });
+
+    toast("Details updated successfully.");
+    setFormEditable(false);
   };
 
   return (
@@ -60,6 +96,7 @@ const PersonalInformation = () => {
           value={facultyId}
           onChange={(e) => setFacultyId(e.target.value)}
           placeholder="Enter your faculty ID"
+          disabled={!formEditable}
         />
 
         <Label>Full Name:</Label>
@@ -68,18 +105,40 @@ const PersonalInformation = () => {
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
           placeholder="Enter your full name"
+          disabled={!formEditable}
         />
 
         <Label>Gender:</Label>
-        <Input
-          type="text"
+        <Select
           value={gender}
-          onChange={(e) => setGender(e.target.value)}
-          placeholder="Enter your gender"
-        />
+          className="block w-[280px] mt-1"
+          onValueChange={(e) => {
+            setGender(e);
+          }}
+          defaultValue={gender}
+          disabled={!formEditable}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select Gender" />
+          </SelectTrigger>
+
+          <SelectContent>
+            <SelectItem value="male">Male</SelectItem>
+            <SelectItem value="female">Female</SelectItem>
+            <SelectItem value="other">Other</SelectItem>
+          </SelectContent>
+        </Select>
 
         <Label>Date of Birth:</Label>
-        <Popover>
+
+        <Input
+          type="text"
+          value={dateOfBirth}
+          onChange={(e) => setDateOfBirth(e.target.value)}
+          placeholder="DD/MM/YYYY"
+          disabled={!formEditable}
+        />
+        {/* <Popover>
           <PopoverTrigger asChild>
             <Button
               variant={"outline"}
@@ -105,45 +164,78 @@ const PersonalInformation = () => {
               initialFocus
             />
           </PopoverContent>
-        </Popover>
+        </Popover> */}
 
-        <Label>Email:</Label>
-        <Input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="Enter your email"
-        />
+        <Label>Blood Group:</Label>
 
+        <Select
+          value={bloodGroup}
+          className="block w-[280px] mt-1"
+          onValueChange={(e) => {
+            setBloodGroup(e);
+          }}
+          defaultValue={bloodGroup}
+          disabled={!formEditable}
+        >
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Select Blood Group" />
+          </SelectTrigger>
+
+          <SelectContent>
+            <SelectItem value="A+">A+ </SelectItem>
+            <SelectItem value="A-">A- </SelectItem>
+            <SelectItem value="B+">B+ </SelectItem>
+            <SelectItem value="B-">B- </SelectItem>
+            <SelectItem value="AB+">AB+ </SelectItem>
+            <SelectItem value="AB-">AB- </SelectItem>
+            <SelectItem value="O+">O+ </SelectItem>
+            <SelectItem value="O-">O- </SelectItem>
+          </SelectContent>
+        </Select>
         <Label>Mobile Number:</Label>
         <Input
           type="text"
           value={mobileNumber}
           onChange={(e) => setMobileNumber(e.target.value)}
           placeholder="Enter your mobile number"
+          disabled={!formEditable}
         />
 
         <Label>Aadhar Number:</Label>
         <Input
           type="text"
-          value={aadharNumber}
-          onChange={(e) => setAadharNumber(e.target.value)}
+          value={aadharDetails}
+          onChange={(e) => setAadharDetails(e.target.value)}
           placeholder="Enter your Aadhar Number"
+          disabled={!formEditable}
         />
+
         <Label>Aadhar Card:</Label>
         <Input
           type="file"
-          value={aadharDetails}
-          onChange={(e) => setAadharDetails(e.target.value)}
+          // value={aadharDetails}
+          // onChange={(e) => setAadharDetails(e.target.value)}
           placeholder="Enter your Aadhar details"
+          disabled={!formEditable}
         />
 
-        <Button
-          type="submit"
-          className=" mx-auto w-[300px] text-white py-2 px-4 rounded"
-        >
-          Submit
-        </Button>
+        {formEditable && (
+          <Button
+            type="submit"
+            className=" mx-auto w-[300px] text-white py-2 px-4 rounded"
+          >
+            Submit Details
+          </Button>
+        )}
+
+        {!formEditable && (
+          <Button
+            className="mx-auto w-[300px] text-white py-2 px-4 rounded"
+            onClick={() => setFormEditable(true)}
+          >
+            Edit Details
+          </Button>
+        )}
       </form>
     </div>
   );

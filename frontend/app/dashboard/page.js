@@ -21,13 +21,12 @@ import { AppreciationAwards } from "@/components/AppreciationAwards";
 import { CommitteeDetails } from "@/components/CommitteeDetails";
 import { LectureDetails } from "@/components/LectureDetails";
 import { ActivitiesDetails } from "@/components/ActivitiesDetails";
+import { BookPublished } from "@/components/BookPublished";
 
 export default function UserInfo() {
   const { data: session } = useSession();
   const { selectedTab, handleAccordionClick } = useSideBarContext();
   const router = useRouter();
-
-  console.log(session);
 
   useEffect(() => {
     if (session && session.user) {
@@ -43,8 +42,8 @@ export default function UserInfo() {
         return <PersonalInformation />;
       case "professional-details":
         return <ProfessionalDetails />;
-      case "research-and-publications":
-        return <ResearchAndPublications />;
+      case "books-published":
+        return <BookPublished />;
       case "patents-registered":
         return <PatentsRegistered />;
       case "financial-support":

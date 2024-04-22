@@ -26,6 +26,7 @@ export default function LoginForm() {
 
       if (res.error) {
         setError("Invalid Credentials");
+        console.log(error);
         return;
       }
 

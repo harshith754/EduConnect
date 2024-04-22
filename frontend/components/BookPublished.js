@@ -1,0 +1,166 @@
+import React, { useEffect, useState } from "react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { toast } from "sonner";
+import axios from "axios";
+import { useSession } from "next-auth/react";
+
+export const BookPublished = () => {
+  const { data: session } = useSession();
+
+  const [books, setBooks] = useState([
+    {
+      title: "",
+      publishers: "",
+      yearOfPublication: "",
+      dateOfPublication: "",
+    },
+  ]);
+
+  const handleAddBook = () => {
+    setBooks([
+      ...books,
+      {
+        title: "",
+        publishers: "",
+        yearOfPublication: "",
+        dateOfPublication: "",
+      },
+    ]);
+  };
+
+  const handleDeleteBook = (index) => {
+    const updatedBooks = [...books];
+    updatedBooks.splice(index, 1);
+    setBooks(updatedBooks);
+  };
+
+  const handleBookChange = (index, field, value) => {
+    const updatedBooks = [...books];
+    updatedBooks[index][field] = value;
+    setBooks(updatedBooks);
+  };
+
+  const [formEditable, setFormEditable] = useState(true);
+
+  useEffect(() => {
+    getBookDetails();
+    toast("Info loaded");
+  }, []);
+
+  const getBookDetails = async () => {
+    const { data } = await axios.get(
+      `/api/books-published/${session.user.email}`,
+    );
+
+    const reqData = data.booksPublished;
+    console.log(reqData);
+    const formattedBooks = reqData.books.map(({ id, ...rest }) => rest);
+    setBooks(formattedBooks);
+    setFormEditable(false);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Books submitted:", {
+      email: session.user.email,
+      books,
+    });
+
+    axios.post("/api/books-published", {
+      email: session.user.email,
+      books,
+    });
+    setFormEditable(false);
+    // Add your logic for submitting the books data
+  };
+
+  return (
+    <div className="flex flex-col px-6 py-3">
+      <h2 className="text-lg font-bold mb-4">Book Information Form</h2>
+      <form className="flex flex-col gap-4">
+        {books.map((book, index) => (
+          <div key={index} className="flex flex-col gap-4 w-[80%] ml-8">
+            <h1>Book {index + 1}</h1>
+            <Label>Title of the book:</Label>
+            <Input
+              type="text"
+              placeholder="Title"
+              value={book.title}
+              onChange={(e) => handleBookChange(index, "title", e.target.value)}
+              disabled={!formEditable}
+            />
+            <Label>Publishers:</Label>
+            <Input
+              type="text"
+              placeholder="publishers"
+              value={book.publishers}
+              onChange={(e) =>
+                handleBookChange(index, "publishers", e.target.value)
+              }
+              disabled={!formEditable}
+            />
+            <Label>Year of Publication:</Label>
+            <Input
+              type="text"
+              placeholder="Year of Publication"
+              value={book.yearOfPublication}
+              onChange={(e) =>
+                handleBookChange(index, "yearOfPublication", e.target.value)
+              }
+              disabled={!formEditable}
+            />
+            <Label>Date of Publication:</Label>
+            <Input
+              type="text"
+              placeholder="DD/MM/YYYY"
+              value={book.dateOfPublication}
+              onChange={(e) =>
+                handleBookChange(index, "dateOfPublication", e.target.value)
+              }
+              disabled={!formEditable}
+            />
+            {formEditable && (
+              <Button
+                type="button"
+                onClick={() => handleDeleteBook(index)}
+                className="text-white w-[200px] mx-auto bg-red-500"
+              >
+                Delete
+              </Button>
+            )}
+          </div>
+        ))}
+
+        {formEditable && (
+          <>
+            <Button
+              type="button"
+              onClick={handleAddBook}
+              className="mx-auto bg-green-500  w-[500px] text-white py-2 px-4 rounded"
+            >
+              Add Book
+            </Button>
+            <Button
+              type="submit"
+              onClick={handleSubmit}
+              className="mx-auto w-[500px] text-white py-2 px-4 rounded"
+            >
+              Submit
+            </Button>
+          </>
+        )}
+
+        {!formEditable && (
+          <Button
+            className="mx-auto w-[300px] text-white py-2 px-4 rounded"
+            onClick={() => setFormEditable(true)}
+          >
+            Edit Details
+          </Button>
+        )}
+      </form>
+    </div>
+  );
+};

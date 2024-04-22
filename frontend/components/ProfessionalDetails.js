@@ -1,10 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { toast } from "sonner";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 
 const ProfessionalDetails = () => {
-  // State for form fields
+  // State for form fields'
+  const { data: session } = useSession();
+
   const [designation, setDesignation] = useState("");
   const [department, setDepartment] = useState("");
   const [dateOfJoining, setDateOfJoining] = useState("");
@@ -18,8 +30,84 @@ const ProfessionalDetails = () => {
 
   // State for multiple educational qualifications
   const [educationalQualifications, setEducationalQualifications] = useState([
-    { degree: "", institute: "", year: "" },
+    { degree: "", institute: "", yearOfCompletion: "" },
   ]);
+
+  const [message, setMessage] = useState("");
+
+  useState(() => {
+    if (message !== "");
+    console.log(message);
+  }, [message]);
+
+  const calculateTeachingExperience = () => {
+    // Check if the dateOfJoining is in the correct format (MM/YYYY)
+    // const datePattern = /^(0[1-9]|1[0-2])\/(19\d{2}|20\d{2})$/; // MM/YYYY format
+    // if (!datePattern.test(dateOfJoining)) {
+    //   toast("Invalid date format. Please enter the date in MM/YYYY format.");
+
+    //   return;
+    // }
+
+    // Split the dateOfJoining into month and year
+    const [joiningMonth, joiningYear] = dateOfJoining.split("/").map(Number);
+    // Get the current date
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
+
+    // Validate the month and year values
+    if (joiningMonth < 1 || joiningMonth > 12) {
+      toast("Invalid month. Please enter a month between 01 and 12.");
+      return;
+    }
+    if (joiningYear < 1900 || joiningYear > currentYear) {
+      toast(
+        `Invalid year. Please enter a year between 1900 and ${currentYear}.`,
+      );
+
+      return;
+    } // Note: Month is 0-indexed in JavaScript
+
+    // Calculate the difference in years
+    let yearsOfExperience = currentYear - joiningYear;
+
+    // Adjust years if the current month is before the joining month
+    if (currentMonth < joiningMonth) {
+      yearsOfExperience--;
+    }
+    setTotalYearsOfTeachingExperienceInInstitute((p) => yearsOfExperience);
+  };
+
+  const [formEditable, setFormEditable] = useState(true);
+
+  useEffect(() => {
+    getProfessionalDetails();
+    toast("Info loaded");
+  }, []);
+
+  const getProfessionalDetails = async () => {
+    const { data } = await axios.get(
+      `/api/professional-details/${session.user.email}`,
+    );
+
+    console.log(data.professionalDetails);
+    if (data && data.professionalDetails) {
+      const reqData = data.professionalDetails;
+      setDesignation(reqData.designation);
+      setDepartment(reqData.department);
+      setDateOfJoining(reqData.dateOfJoining);
+      const formattedEducationalQualifications =
+        reqData.educationalQualifications.map(
+          ({ professionalDetailsId, ...rest }) => rest,
+        );
+      setEducationalQualifications(formattedEducationalQualifications);
+      setTotalYearsOfTeachingExperience(reqData.teachingExperience);
+      setTotalYearsOfTeachingExperienceInInstitute(reqData.instituteExperience);
+      setHighestQualification(reqData.highestQualification);
+      setFormEditable(false);
+    }
+  };
 
   // Function to handle form submission
   const handleSubmit = (e) => {
@@ -33,15 +121,32 @@ const ProfessionalDetails = () => {
       totalYearsOfTeachingExperience,
       totalYearsOfTeachingExperienceInInstitute,
       educationalQualifications,
+      email: session.user.email,
     });
-  };
 
+    axios.post("/api/professional-details", {
+      designation,
+      department,
+      dateOfJoining,
+      highestQualification,
+      teachingExperience: totalYearsOfTeachingExperience,
+      instituteExperience: totalYearsOfTeachingExperienceInInstitute,
+      educationalQualifications,
+      email: session.user.email,
+    });
+    setFormEditable(false);
+  };
   // Function to add a new educational qualification section
   const handleAddEducation = () => {
     setEducationalQualifications([
       ...educationalQualifications,
-      { degree: "", institute: "", year: "" },
+      { degree: "", institute: "", yearOfCompletion: "" },
     ]);
+  };
+  const handleDeleteEducation = (index) => {
+    const updatedEducationalQualifications = [...educationalQualifications];
+    updatedEducationalQualifications.splice(index, 1);
+    setEducationalQualifications(updatedEducationalQualifications);
   };
 
   // Function to update educational qualification details
@@ -54,38 +159,120 @@ const ProfessionalDetails = () => {
   return (
     <div className="flex flex-col px-6 py-3">
       <h2 className="text-lg font-bold mb-4">Professional Details Form</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form className="flex flex-col gap-4">
         <Label>Designation:</Label>
-        <Input
-          type="text"
-          placeholder="Designation"
+
+        <Select
           value={designation}
-          onChange={(e) => setDesignation(e.target.value)}
-        />
+          className="block w-max mt-1 px-10"
+          onValueChange={(e) => {
+            setDesignation(e);
+          }}
+          defaultValue={designation}
+          disabled={!formEditable}
+        >
+          <SelectTrigger className="w-max">
+            <SelectValue placeholder="Select Designation" />
+          </SelectTrigger>
+
+          <SelectContent>
+            <SelectItem value="Professor">Professor</SelectItem>
+            <SelectItem value="Associate Professor">
+              Associate Professor
+            </SelectItem>
+            <SelectItem value="Assistant Professor">
+              Assistant Professor
+            </SelectItem>
+            <SelectItem value="Lecturer">Lecturer</SelectItem>
+            <SelectItem value="Research Scientist">
+              Research Scientist
+            </SelectItem>
+          </SelectContent>
+        </Select>
 
         <Label>Department:</Label>
-        <Input
-          type="text"
-          placeholder="Department"
+        <Select
           value={department}
-          onChange={(e) => setDepartment(e.target.value)}
-        />
+          className="block w-[280px] mt-1"
+          onValueChange={(e) => {
+            setDepartment(e);
+          }}
+          defaultValue={department}
+          disabled={!formEditable}
+        >
+          <SelectTrigger className="w-max">
+            <SelectValue placeholder="Select Department" />
+          </SelectTrigger>
 
+          <SelectContent>
+            <SelectItem value="Computer Engineering">
+              Computer Engineering
+            </SelectItem>
+            <SelectItem value="Electronics and Telecommunication Engineering (EXTC)">
+              Electronics and Telecommunication Engineering (EXTC)
+            </SelectItem>
+            <SelectItem value="Computer Science">Computer Science</SelectItem>
+            <SelectItem value="Data Science">Data Science</SelectItem>
+            <SelectItem value="Artificial Intelligence and Machine Learning (AIML)">
+              Artificial Intelligence and Machine Learning (AIML)
+            </SelectItem>
+            {/* Add more department options as needed */}
+          </SelectContent>
+        </Select>
         <Label>Date of Joining:</Label>
         <Input
           type="text"
-          placeholder="Date of Joining"
+          placeholder="MM/YYYY"
           value={dateOfJoining}
-          onChange={(e) => setDateOfJoining(e.target.value)}
+          onChange={(e) => {
+            setDateOfJoining(e.target.value);
+
+            if (dateOfJoining >= 7) calculateTeachingExperience();
+          }}
+          disabled={!formEditable}
         />
 
         <Label>Highest Qualification:</Label>
-        <Input
-          type="text"
-          placeholder="Highest Qualification"
+        <Select
           value={highestQualification}
-          onChange={(e) => setHighestQualification(e.target.value)}
-        />
+          className="block  mt-1"
+          onValueChange={(e) => {
+            setHighestQualification(e);
+          }}
+          defaultValue={highestQualification}
+          disabled={!formEditable}
+        >
+          <SelectTrigger className="w-max p-5">
+            <SelectValue placeholder="Select Highest Qualification" />
+          </SelectTrigger>
+
+          <SelectContent>
+            <SelectItem value="Ph.D. in Engineering">
+              Ph.D. in Engineering
+            </SelectItem>
+            <SelectItem value="M.S. in Engineering">
+              M.S. in Engineering
+            </SelectItem>
+            <SelectItem value="M.Eng. in Engineering">
+              M.Eng. in Engineering
+            </SelectItem>
+            <SelectItem value="M.Tech. in Engineering">
+              M.Tech. in Engineering
+            </SelectItem>
+            <SelectItem value="MCA for Computer Engineering faculty">
+              MCA for Computer Engineering faculty
+            </SelectItem>
+            <SelectItem value="B.E. in Engineering">
+              B.E. in Engineering
+            </SelectItem>
+            <SelectItem value="B.Tech. in Engineering">
+              B.Tech. in Engineering
+            </SelectItem>
+            <SelectItem value="B.S. in Engineering">
+              B.S. in Engineering
+            </SelectItem>
+          </SelectContent>
+        </Select>
 
         <Label>Total Years of Teaching Experience:</Label>
         <Input
@@ -93,6 +280,7 @@ const ProfessionalDetails = () => {
           placeholder="Total Years of Teaching Experience"
           value={totalYearsOfTeachingExperience}
           onChange={(e) => setTotalYearsOfTeachingExperience(e.target.value)}
+          disabled={!formEditable}
         />
 
         <Label>Total Years of Teaching Experience (In Institute):</Label>
@@ -103,6 +291,7 @@ const ProfessionalDetails = () => {
           onChange={(e) =>
             setTotalYearsOfTeachingExperienceInInstitute(e.target.value)
           }
+          disabled={!formEditable}
         />
 
         <Label>Educational Qualifications:</Label>
@@ -115,6 +304,7 @@ const ProfessionalDetails = () => {
               onChange={(e) =>
                 handleEducationChange(index, "degree", e.target.value)
               }
+              disabled={!formEditable}
             />
             <Input
               type="text"
@@ -123,32 +313,55 @@ const ProfessionalDetails = () => {
               onChange={(e) =>
                 handleEducationChange(index, "institute", e.target.value)
               }
+              disabled={!formEditable}
             />
             <Input
               type="text"
               placeholder="Year"
-              value={education.year}
+              value={education.yearOfCompletion}
               onChange={(e) =>
-                handleEducationChange(index, "year", e.target.value)
+                handleEducationChange(index, "yearOfCompletion", e.target.value)
               }
+              disabled={!formEditable}
             />
+            {formEditable && (
+              <Button
+                type="button"
+                onClick={() => handleDeleteEducation(index)}
+              >
+                Delete
+              </Button>
+            )}
           </div>
         ))}
 
-        <Button
-          type="button"
-          onClick={handleAddEducation}
-          className="bg-green-500 text-white py-2 px-4 rounded"
-        >
-          Add Education
-        </Button>
+        {formEditable && (
+          <>
+            <Button
+              type="button"
+              onClick={handleAddEducation}
+              className="bg-green-500 text-white py-2 px-4 rounded"
+            >
+              Add Educational Qualifications.
+            </Button>
+            <Button
+              type="submit"
+              className="mx-auto w-[300px] text-white py-2 px-4 rounded"
+              onClick={handleSubmit}
+            >
+              Submit
+            </Button>
+          </>
+        )}
 
-        <Button
-          type="submit"
-          className="mx-auto w-[300px] text-white py-2 px-4 rounded"
-        >
-          Submit
-        </Button>
+        {!formEditable && (
+          <Button
+            className="mx-auto w-[300px] text-white py-2 px-4 rounded"
+            onClick={() => setFormEditable(true)}
+          >
+            Edit Details
+          </Button>
+        )}
       </form>
     </div>
   );
