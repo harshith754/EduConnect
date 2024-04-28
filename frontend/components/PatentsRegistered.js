@@ -1,25 +1,23 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { toast } from "sonner";
+import { toast } from "sonner"; // Assuming this is for notifications
 import axios from "axios";
 import { useSession } from "next-auth/react";
 
 export const PatentsRegistered = () => {
   const { data: session } = useSession();
-  const [formEditable, setFormEditable] = useState(true);
 
   const [patents, setPatents] = useState([
     {
-      type: "",
+      patentType: "",
       applicationNo: "",
-      title: "",
+      patentTitle: "",
       publicationDate: "",
       formFillingDate: "",
       authorList: "",
       publishedYear: "",
-      faculty: "",
     },
   ]);
 
@@ -27,14 +25,13 @@ export const PatentsRegistered = () => {
     setPatents([
       ...patents,
       {
-        type: "",
+        patentType: "",
         applicationNo: "",
-        title: "",
+        patentTitle: "",
         publicationDate: "",
         formFillingDate: "",
         authorList: "",
         publishedYear: "",
-        faculty: "",
       },
     ]);
   };
@@ -51,9 +48,29 @@ export const PatentsRegistered = () => {
     setPatents(updatedPatents);
   };
 
+  const [formEditable, setFormEditable] = useState(true);
+
+  useEffect(() => {
+    // Load patent details when the component mounts
+    getPatentDetails();
+  }, []);
+
+  const getPatentDetails = async () => {
+    const { data } = await axios.get(
+      `/api/patents-registered/${session.user.email}`,
+    );
+
+    const reqData = data.patentsRegistered;
+    console.log(reqData);
+    const formattedPatents = reqData.patents.map(({ id, ...rest }) => rest);
+    setPatents(formattedPatents);
+    setFormEditable(false);
+    toast("Patent info loaded");
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Books submitted:", {
+    console.log("Patents submitted:", {
       email: session.user.email,
       patents,
     });
@@ -63,6 +80,7 @@ export const PatentsRegistered = () => {
       patents,
     });
     setFormEditable(false);
+    // Add your logic for submitting the patents data
   };
 
   return (
@@ -70,16 +88,19 @@ export const PatentsRegistered = () => {
       <h2 className="text-lg font-bold mb-4">Patent Information Form</h2>
       <form className="flex flex-col gap-4">
         {patents.map((patent, index) => (
-          <div key={index} className="flex flex-col gap-4">
-            <h1> Patent {index + 1} </h1>
-
+          <div key={index} className="flex flex-col gap-4 w-[80%] ml-8">
+            <h1>Patent {index + 1}</h1>
             <Label>Patent Type:</Label>
             <Input
               type="text"
               placeholder="Patent Type"
-              value={patent.type}
+              value={patent.patentType}
               onChange={(e) =>
-                handlePatentChange(index, "type", e.target.value)
+                handlePatentChange(index, "patentType", e.target.value)
+              }
+              disabled={!formEditable}
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
               }
             />
             <Label>Application No:</Label>
@@ -90,32 +111,48 @@ export const PatentsRegistered = () => {
               onChange={(e) =>
                 handlePatentChange(index, "applicationNo", e.target.value)
               }
+              disabled={!formEditable}
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+              }
             />
             <Label>Patent Title:</Label>
             <Input
               type="text"
               placeholder="Patent Title"
-              value={patent.title}
+              value={patent.patentTitle}
               onChange={(e) =>
-                handlePatentChange(index, "title", e.target.value)
+                handlePatentChange(index, "patentTitle", e.target.value)
+              }
+              disabled={!formEditable}
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
               }
             />
             <Label>Publication Date:</Label>
             <Input
               type="text"
-              placeholder="DD/MM/YYYY"
+              placeholder="Publication Date"
               value={patent.publicationDate}
               onChange={(e) =>
                 handlePatentChange(index, "publicationDate", e.target.value)
+              }
+              disabled={!formEditable}
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
               }
             />
             <Label>Form Filling Date:</Label>
             <Input
               type="text"
-              placeholder="DD/MM/YYYY"
+              placeholder="Form Filling Date"
               value={patent.formFillingDate}
               onChange={(e) =>
                 handlePatentChange(index, "formFillingDate", e.target.value)
+              }
+              disabled={!formEditable}
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
               }
             />
             <Label>Author List:</Label>
@@ -126,6 +163,10 @@ export const PatentsRegistered = () => {
               onChange={(e) =>
                 handlePatentChange(index, "authorList", e.target.value)
               }
+              disabled={!formEditable}
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+              }
             />
             <Label>Published Year:</Label>
             <Input
@@ -135,25 +176,23 @@ export const PatentsRegistered = () => {
               onChange={(e) =>
                 handlePatentChange(index, "publishedYear", e.target.value)
               }
-            />
-            <Label>Faculty:</Label>
-            <Input
-              type="text"
-              placeholder="Faculty"
-              value={patent.faculty}
-              onChange={(e) =>
-                handlePatentChange(index, "faculty", e.target.value)
+              disabled={!formEditable}
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
               }
             />
-            <Button
-              type="button"
-              onClick={() => handleDeletePatent(index)}
-              className="text-white w-[200px] mx-auto bg-red-500"
-            >
-              Delete
-            </Button>
+            {formEditable && (
+              <Button
+                type="button"
+                onClick={() => handleDeletePatent(index)}
+                className="text-white w-[200px] mx-auto bg-red-500"
+              >
+                Delete
+              </Button>
+            )}
           </div>
-        ))}{" "}
+        ))}
+
         {formEditable && (
           <>
             <Button
@@ -161,7 +200,7 @@ export const PatentsRegistered = () => {
               onClick={handleAddPatent}
               className="mx-auto bg-green-500  w-[500px] text-white py-2 px-4 rounded"
             >
-              Add Patent Information
+              Add Patent
             </Button>
             <Button
               type="submit"
@@ -172,6 +211,7 @@ export const PatentsRegistered = () => {
             </Button>
           </>
         )}
+
         {!formEditable && (
           <Button
             className="mx-auto w-[300px] text-white py-2 px-4 rounded"

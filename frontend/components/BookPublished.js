@@ -46,7 +46,6 @@ export const BookPublished = () => {
 
   useEffect(() => {
     getBookDetails();
-    toast("Info loaded");
   }, []);
 
   const getBookDetails = async () => {
@@ -59,6 +58,7 @@ export const BookPublished = () => {
     const formattedBooks = reqData.books.map(({ id, ...rest }) => rest);
     setBooks(formattedBooks);
     setFormEditable(false);
+    toast("Info loaded");
   };
 
   const handleSubmit = (e) => {
@@ -90,6 +90,9 @@ export const BookPublished = () => {
               value={book.title}
               onChange={(e) => handleBookChange(index, "title", e.target.value)}
               disabled={!formEditable}
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+              }
             />
             <Label>Publishers:</Label>
             <Input
@@ -100,6 +103,9 @@ export const BookPublished = () => {
                 handleBookChange(index, "publishers", e.target.value)
               }
               disabled={!formEditable}
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+              }
             />
             <Label>Year of Publication:</Label>
             <Input
@@ -110,6 +116,9 @@ export const BookPublished = () => {
                 handleBookChange(index, "yearOfPublication", e.target.value)
               }
               disabled={!formEditable}
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+              }
             />
             <Label>Date of Publication:</Label>
             <Input
@@ -120,6 +129,9 @@ export const BookPublished = () => {
                 handleBookChange(index, "dateOfPublication", e.target.value)
               }
               disabled={!formEditable}
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+              }
             />
             {formEditable && (
               <Button

@@ -83,7 +83,6 @@ const ProfessionalDetails = () => {
 
   useEffect(() => {
     getProfessionalDetails();
-    toast("Info loaded");
   }, []);
 
   const getProfessionalDetails = async () => {
@@ -106,6 +105,7 @@ const ProfessionalDetails = () => {
       setTotalYearsOfTeachingExperienceInInstitute(reqData.instituteExperience);
       setHighestQualification(reqData.highestQualification);
       setFormEditable(false);
+      toast("Info loaded");
     }
   };
 
@@ -164,14 +164,14 @@ const ProfessionalDetails = () => {
 
         <Select
           value={designation}
-          className="block w-max mt-1 px-10"
+          className="block w-max mt-1 px-10 disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
           onValueChange={(e) => {
             setDesignation(e);
           }}
           defaultValue={designation}
           disabled={!formEditable}
         >
-          <SelectTrigger className="w-max">
+          <SelectTrigger className="w-max disabled:bg-gray-300 disabled:text-black disabled:opacity-100">
             <SelectValue placeholder="Select Designation" />
           </SelectTrigger>
 
@@ -193,14 +193,14 @@ const ProfessionalDetails = () => {
         <Label>Department:</Label>
         <Select
           value={department}
-          className="block w-[280px] mt-1"
+          className="block w-[280px] mt-1 disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
           onValueChange={(e) => {
             setDepartment(e);
           }}
           defaultValue={department}
           disabled={!formEditable}
         >
-          <SelectTrigger className="w-max">
+          <SelectTrigger className="w-max disabled:bg-gray-300 disabled:text-black disabled:opacity-100">
             <SelectValue placeholder="Select Department" />
           </SelectTrigger>
 
@@ -230,19 +230,24 @@ const ProfessionalDetails = () => {
             if (dateOfJoining >= 7) calculateTeachingExperience();
           }}
           disabled={!formEditable}
+          className={
+            "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+          }
         />
 
         <Label>Highest Qualification:</Label>
         <Select
           value={highestQualification}
-          className="block  mt-1"
+          className={
+            "block  mt-1 disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+          }
           onValueChange={(e) => {
             setHighestQualification(e);
           }}
           defaultValue={highestQualification}
           disabled={!formEditable}
         >
-          <SelectTrigger className="w-max p-5">
+          <SelectTrigger className="w-max p-5 disabled:bg-gray-300 disabled:text-black disabled:opacity-100">
             <SelectValue placeholder="Select Highest Qualification" />
           </SelectTrigger>
 
@@ -281,6 +286,9 @@ const ProfessionalDetails = () => {
           value={totalYearsOfTeachingExperience}
           onChange={(e) => setTotalYearsOfTeachingExperience(e.target.value)}
           disabled={!formEditable}
+          className={
+            "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+          }
         />
 
         <Label>Total Years of Teaching Experience (In Institute):</Label>
@@ -290,6 +298,9 @@ const ProfessionalDetails = () => {
           value={totalYearsOfTeachingExperienceInInstitute}
           onChange={(e) =>
             setTotalYearsOfTeachingExperienceInInstitute(e.target.value)
+          }
+          className={
+            "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
           }
           disabled={!formEditable}
         />
@@ -304,6 +315,9 @@ const ProfessionalDetails = () => {
               onChange={(e) =>
                 handleEducationChange(index, "degree", e.target.value)
               }
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+              }
               disabled={!formEditable}
             />
             <Input
@@ -313,6 +327,9 @@ const ProfessionalDetails = () => {
               onChange={(e) =>
                 handleEducationChange(index, "institute", e.target.value)
               }
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+              }
               disabled={!formEditable}
             />
             <Input
@@ -321,6 +338,9 @@ const ProfessionalDetails = () => {
               value={education.yearOfCompletion}
               onChange={(e) =>
                 handleEducationChange(index, "yearOfCompletion", e.target.value)
+              }
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
               }
               disabled={!formEditable}
             />

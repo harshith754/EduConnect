@@ -25,6 +25,7 @@ model User {
   professionalDetails ProfessionalDetails?
   booksPublished      BooksPublished?
   patentsRegistered   PatentsRegistered?
+  awardsReceived      AwardsReceived?
 }
 
 model PersonalDetails {
@@ -78,6 +79,13 @@ model PatentsRegistered {
   patents Patent[]
 }
 
+model AwardsReceived {
+  id     Int     @id @default(autoincrement())
+  user   User    @relation(fields: [email], references: [email])
+  email  String  @unique
+  awards Award[]
+}
+
 model Book {
   id                Int             @id @default(autoincrement())
   title             String?
@@ -90,14 +98,25 @@ model Book {
 
 model Patent {
   id                  Int                @id @default(autoincrement())
-  type                String?
+  patentType          String?
   applicationNo       String?
-  title               String?
+  patentTitle         String?
   publicationDate     String?
   formFillingDate     String?
   authorList          String?
   publishedYear       String?
-  faculty             String?
   PatentsRegistered   PatentsRegistered? @relation(fields: [patentsRegisteredId], references: [id])
   patentsRegisteredId Int?
+}
+
+model Award {
+  id               Int             @id @default(autoincrement())
+  awardName        String?
+  agencyName       String?
+  agencyEmail      String?
+  agencyAddress    String?
+  yearReceived     String?
+  hasFellowship    String?
+  AwardsReceived   AwardsReceived? @relation(fields: [awardsReceivedId], references: [id])
+  awardsReceivedId Int?
 }

@@ -36,7 +36,6 @@ const PersonalInformation = () => {
 
   useEffect(() => {
     getPersonalDetails();
-    toast("Info loaded");
   }, []);
 
   const getPersonalDetails = async () => {
@@ -55,6 +54,7 @@ const PersonalInformation = () => {
       setMobileNumber(data.personalDetails.mobileNumber);
       setFormEditable(false);
     }
+    toast("Info loaded");
   };
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -97,6 +97,9 @@ const PersonalInformation = () => {
           onChange={(e) => setFacultyId(e.target.value)}
           placeholder="Enter your faculty ID"
           disabled={!formEditable}
+          className={
+            "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+          }
         />
 
         <Label>Full Name:</Label>
@@ -106,19 +109,22 @@ const PersonalInformation = () => {
           onChange={(e) => setFullName(e.target.value)}
           placeholder="Enter your full name"
           disabled={!formEditable}
+          className={
+            "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+          }
         />
 
         <Label>Gender:</Label>
         <Select
           value={gender}
-          className="block w-[280px] mt-1"
+          className="block w-[280px] mt-1 "
           onValueChange={(e) => {
             setGender(e);
           }}
           defaultValue={gender}
           disabled={!formEditable}
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[180px]  disabled:bg-gray-300 disabled:text-black disabled:opacity-100">
             <SelectValue placeholder="Select Gender" />
           </SelectTrigger>
 
@@ -137,6 +143,9 @@ const PersonalInformation = () => {
           onChange={(e) => setDateOfBirth(e.target.value)}
           placeholder="DD/MM/YYYY"
           disabled={!formEditable}
+          className={
+            "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+          }
         />
         {/* <Popover>
           <PopoverTrigger asChild>
@@ -177,7 +186,7 @@ const PersonalInformation = () => {
           defaultValue={bloodGroup}
           disabled={!formEditable}
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[180px] disabled:bg-gray-300 disabled:text-black disabled:opacity-100">
             <SelectValue placeholder="Select Blood Group" />
           </SelectTrigger>
 
@@ -199,6 +208,9 @@ const PersonalInformation = () => {
           onChange={(e) => setMobileNumber(e.target.value)}
           placeholder="Enter your mobile number"
           disabled={!formEditable}
+          className={
+            "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+          }
         />
 
         <Label>Aadhar Number:</Label>
@@ -208,6 +220,9 @@ const PersonalInformation = () => {
           onChange={(e) => setAadharDetails(e.target.value)}
           placeholder="Enter your Aadhar Number"
           disabled={!formEditable}
+          className={
+            "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+          }
         />
 
         <Label>Aadhar Card:</Label>
@@ -217,6 +232,9 @@ const PersonalInformation = () => {
           // onChange={(e) => setAadharDetails(e.target.value)}
           placeholder="Enter your Aadhar details"
           disabled={!formEditable}
+          className={
+            "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+          }
         />
 
         {formEditable && (

@@ -22,6 +22,7 @@ import { CommitteeDetails } from "@/components/CommitteeDetails";
 import { LectureDetails } from "@/components/LectureDetails";
 import { ActivitiesDetails } from "@/components/ActivitiesDetails";
 import { BookPublished } from "@/components/BookPublished";
+import { FacultyInformation } from "@/components/FacultyInformation";
 
 export default function UserInfo() {
   const { data: session } = useSession();
@@ -64,6 +65,8 @@ export default function UserInfo() {
         return <ActivitiesDetails />;
       case "institutional-research-funding":
         return <InstitutionalResearchFunding />;
+      case "get-information":
+        return <FacultyInformation />;
       default:
         return <Dashboard />;
     }

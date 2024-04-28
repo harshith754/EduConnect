@@ -72,7 +72,7 @@ const SideBar = () => {
               >
                 Patents registered
               </div>
-              <div
+              {/* <div
                 className={`p-2 ${selectedTab === "financial-support" ? "font-bold" : ""}`}
                 onClick={() => handleAccordionClick("financial-support")}
               >
@@ -83,6 +83,12 @@ const SideBar = () => {
                 onClick={() => handleAccordionClick("teachers-fdp")}
               >
                 Teachers Undergoing FDPs/MDPs
+              </div> */}
+              <div
+                className={`p-2 ${selectedTab === "appreciation-awards" ? "font-bold" : ""}`}
+                onClick={() => handleAccordionClick("appreciation-awards")}
+              >
+                Appreciation and Awards
               </div>
               <div
                 className={`p-2 ${selectedTab === "granted-fellowship" ? "font-bold" : ""}`}
@@ -96,12 +102,7 @@ const SideBar = () => {
               >
                 Consultancy and Corporate Training Revenue
               </div>
-              <div
-                className={`p-2 ${selectedTab === "appreciation-awards" ? "font-bold" : ""}`}
-                onClick={() => handleAccordionClick("appreciation-awards")}
-              >
-                Appreciation and Awards
-              </div>
+
               <div
                 className={`p-2 ${selectedTab === "committee-details" ? "font-bold" : ""}`}
                 onClick={() => handleAccordionClick("committee-details")}
@@ -136,10 +137,10 @@ const SideBar = () => {
             </AccordionTrigger>
             <AccordionContent className="text-xs pl-4 flex flex-col divide-y divide-primary-foreground">
               <div
-                className={`p-2 ${selectedTab === "personal-information" ? "font-bold" : ""}`}
-                onClick={() => handleAccordionClick("personal-information")}
+                className={`p-2 ${selectedTab === "get-information" ? "font-bold" : ""}`}
+                onClick={() => handleAccordionClick("get-information")}
               >
-                a1
+                Get Faculty Information
               </div>
               <div
                 className={`p-2 ${selectedTab === "professional-details" ? "font-bold" : ""}`}
@@ -162,12 +163,6 @@ const SideBar = () => {
               </div>
             </AccordionTrigger>
             <AccordionContent className="text-xs pl-4 flex flex-col divide-y divide-primary-foreground">
-              <div
-                className={`p-2 ${selectedTab === "personal-information" ? "font-bold" : ""}`}
-                onClick={() => handleAccordionClick("personal-information")}
-              >
-                a1
-              </div>
               <div
                 className={`p-2 ${selectedTab === "professional-details" ? "font-bold" : ""}`}
                 onClick={() => handleAccordionClick("professional-details")}
