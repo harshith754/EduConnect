@@ -3,10 +3,15 @@ import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
+import ExcelDownload from "./ExcelDownload";
 
 export const FacultyInformation = () => {
   const [selectedFields, setSelectedFields] = useState([]);
   const [selectedTitles, setSelectedTitles] = useState([]);
+
+  const [dataAvailable, setDataAvailable] = useState(false);
+
+  const [data, setData] = useState({});
 
   const availableFields = [
     {
@@ -110,14 +115,40 @@ export const FacultyInformation = () => {
     e.preventDefault();
     // console.log(selectedFields);
 
-    const postData = await axios.post("/api/get-information", {
+    setDataAvailable(false);
+
+    const { data } = await axios.post("/api/get-information", {
       selectedFields,
       selectedTitles,
     });
 
-    const data = postData.data;
+    console.log(data.postData);
 
-    console.log(JSON.stringify(data));
+    const pD = data.postData;
+
+    if (data) {
+      const filteredData = pD.map((item) => {
+        const filteredItem = { ...item };
+        Object.keys(filteredItem).forEach((key) => {
+          if (filteredItem[key] === null) {
+            delete filteredItem[key];
+          } else if (typeof filteredItem[key] === "object") {
+            const innerKeys = Object.keys(filteredItem[key]);
+            innerKeys.forEach((innerKey) => {
+              if (filteredItem[key][innerKey] === null) {
+                delete filteredItem[key][innerKey];
+              }
+            });
+          }
+        });
+        return filteredItem;
+      });
+      console.log(JSON.stringify(filteredData));
+      setData(filteredData);
+      setDataAvailable(true);
+    } else {
+      console.log(JSON.stringify(pD));
+    }
   };
 
   const renderCheckboxes = () => {
@@ -131,14 +162,13 @@ export const FacultyInformation = () => {
                 table.fields.map((field) =>
                   typeof field === "string" ? (
                     <div className="flex flex-row gap-3 py-1 px-3">
-                      <Label key={field}>{field}</Label>
-
                       <Checkbox
                         checked={selectedFields.includes(field)}
                         onCheckedChange={() =>
                           handleCheckboxChange(field, table.title)
                         }
                       />
+                      <Label key={field}>{field}</Label>
                     </div>
                   ) : (
                     <div key={field.title}>
@@ -146,14 +176,14 @@ export const FacultyInformation = () => {
                       {Array.isArray(field.fields) &&
                         field.fields.map((subField) => (
                           <div className="flex flex-row gap-3 py-1 px-3">
-                            <Label key={subField}>{subField}</Label>
-
                             <Checkbox
                               checked={selectedFields.includes(subField)}
                               onCheckedChange={() =>
                                 handleCheckboxChange(subField, field.title)
                               }
                             />
+
+                            <Label key={subField}>{subField}</Label>
                           </div>
                         ))}
                     </div>
@@ -185,8 +215,14 @@ export const FacultyInformation = () => {
           </ul>
 
           <Button onClick={handleSubmit}>Get Information</Button>
-        </div>
 
+          {dataAvailable && (
+            <>
+              <ExcelDownload jsonData={data} selectedTitles={selectedTitles} />
+            </>
+          )}
+        </div>
+        {/* 
         <div>
           <h1 className="text-lg font-bold mb-4">Selected Categories</h1>
           <ul>
@@ -198,7 +234,7 @@ export const FacultyInformation = () => {
           </ul>
 
           <Button onClick={handleSubmit}>Get Information</Button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

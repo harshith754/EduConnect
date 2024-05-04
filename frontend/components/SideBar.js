@@ -142,16 +142,16 @@ const SideBar = () => {
               >
                 Get Faculty Information
               </div>
-              <div
+              {/* <div
                 className={`p-2 ${selectedTab === "professional-details" ? "font-bold" : ""}`}
                 onClick={() => handleAccordionClick("professional-details")}
               >
                 a2
-              </div>
+              </div> */}
             </AccordionContent>
           </AccordionItem>
         </Accordion>
-        <Accordion type="multiple">
+        {/* <Accordion type="multiple">
           <AccordionItem value="item-1">
             <AccordionTrigger>
               <div
@@ -171,7 +171,7 @@ const SideBar = () => {
               </div>
             </AccordionContent>
           </AccordionItem>
-        </Accordion>
+        </Accordion> */}
       </div>
 
       <div className="mx-auto text-xs w-[200px] rounded-3xl shadow-lg p-5 px-6 bg-zince-300/10 flex flex-col gap-2 my-6">
