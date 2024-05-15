@@ -206,7 +206,7 @@ export const FacultyInformation = () => {
 
             <div className="flex flex-col">
               {table.fields.map((field) => (
-                <div className="flex flex-row gap-3 py-1 px-3">
+                <div className="flex flex-row gap-3 py-1 px-3" key={field}>
                   <Checkbox
                     checked={selectedFields.includes(field)}
                     onCheckedChange={() =>

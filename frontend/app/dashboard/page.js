@@ -35,7 +35,7 @@ export default function UserInfo() {
     } else {
       router.push("/");
     }
-  }, [session]);
+  }, [session, router]);
 
   // Function to render the component based on the selectedTab
   const renderTabContent = () => {
