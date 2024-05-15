@@ -112,7 +112,22 @@ const ProfessionalDetails = () => {
   // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your logic for form submission here
+
+    // Client-side validation logic
+    if (
+      !designation ||
+      !department ||
+      !dateOfJoining ||
+      !highestQualification ||
+      !totalYearsOfTeachingExperience ||
+      !totalYearsOfTeachingExperienceInInstitute ||
+      !educationalQualifications
+    ) {
+      toast.error("Please fill out all required fields.");
+      return;
+    }
+
+    // If all validations pass, proceed with form submission
     console.log("Professional Details submitted:", {
       designation,
       department,
@@ -136,6 +151,7 @@ const ProfessionalDetails = () => {
     });
     setFormEditable(false);
   };
+
   // Function to add a new educational qualification section
   const handleAddEducation = () => {
     setEducationalQualifications([

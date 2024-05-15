@@ -11,6 +11,7 @@ export async function POST(req) {
       mobileNumber,
       aadharDetails,
       facultyId,
+      imageId,
     } = await req.json();
 
     // Create a new PersonalDetails instance
@@ -37,6 +38,7 @@ export async function POST(req) {
           mobileNumber,
           aadharDetails,
           facultyId,
+          imageId,
         },
       });
     } else {
@@ -49,6 +51,7 @@ export async function POST(req) {
           mobileNumber,
           aadharDetails,
           facultyId,
+          imageId,
           user: {
             connect: {
               email: email,

@@ -21,6 +21,7 @@ export async function POST(req) {
                 aadharDetails: selectedFields.includes("aadharDetails"),
                 facultyId: selectedFields.includes("facultyId"),
                 bloodGroup: selectedFields.includes("bloodGroup"),
+                imageId: selectedFields.includes("imageId"),
               },
             }
           : false,
@@ -100,38 +101,6 @@ export async function POST(req) {
           : false,
       },
     });
-
-    // info.forEach((item, index) => {
-    //   console.log(`Item ${index + 1}:`);
-    //   console.log("Email:", item.email);
-    //   console.log("Name:", item.name);
-    //   console.log("PersonalDetails:", item.personalDetails);
-    //   console.log("ProfessionalDetails:", item.professionalDetails);
-
-    //   // Check if BooksPublished exists and has books
-    //   if (
-    //     item.booksPublished &&
-    //     item.booksPublished.books &&
-    //     item.booksPublished.books.length > 0
-    //   ) {
-    //     console.log("BooksPublished:");
-    //     // Iterate through each book in the 'books' array
-    //     item.booksPublished.books.forEach((book, bookIndex) => {
-    //       console.log(`Book ${bookIndex + 1}:`);
-    //       console.log("Title:", book.title);
-    //       console.log("Publishers:", book.publishers);
-    //       console.log("Year of Publication:", book.yearOfPublication);
-    //       console.log("Date of Publication:", book.dateOfPublication);
-    //       // Add more book details as needed
-    //     });
-    //   } else {
-    //     console.log("BooksPublished: No books available");
-    //   }
-
-    //   // Add similar logic for PatentsRegistered and AwardsReceived if needed
-
-    //   console.log("----------------------------------------");
-    // });
 
     return NextResponse.json({ postData }, { status: 201 });
   } catch (error) {

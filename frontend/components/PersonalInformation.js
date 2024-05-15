@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { CldImage, CldUploadButton } from "next-cloudinary";
 
 const PersonalInformation = () => {
   // State for form fields
@@ -29,6 +30,8 @@ const PersonalInformation = () => {
   const [facultyId, setFacultyId] = useState("");
   const [bloodGroup, setBloodGroup] = useState(""); // Add blood group state
   const [formEditable, setFormEditable] = useState(true);
+
+  const [imageId, setImageId] = useState("");
 
   const { data: session } = useSession();
   console.log(session.user.email);
@@ -52,14 +55,36 @@ const PersonalInformation = () => {
       setBloodGroup(data.personalDetails.bloodGroup);
       setFacultyId(data.personalDetails.facultyId);
       setMobileNumber(data.personalDetails.mobileNumber);
+      setImageId(data.personalDetails.imageId);
+
+      console.log(data.personalDetails);
       setFormEditable(false);
     }
     toast("Info loaded");
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add your logic for form submission here
 
+    // Client-side validation logic
+    if (
+      !fullName ||
+      !gender ||
+      !dateOfBirth ||
+      !mobileNumber ||
+      !aadharDetails
+    ) {
+      toast.error("Please fill out all required fields.");
+      return;
+    }
+
+    if (!isValidMobileNumber(mobileNumber)) {
+      toast.error("Please enter a valid mobile number.");
+      return;
+    }
+
+    // Additional validation logic for other fields if needed
+
+    // If all validations pass, proceed with form submission
     console.log("Form submitted:", {
       fullName,
       gender,
@@ -69,6 +94,7 @@ const PersonalInformation = () => {
       aadharDetails,
       facultyId,
       bloodGroup,
+      imageId,
     });
 
     axios.post("/api/personal-details", {
@@ -80,16 +106,31 @@ const PersonalInformation = () => {
       aadharDetails,
       facultyId,
       bloodGroup,
+      imageId,
     });
 
     toast("Details updated successfully.");
     setFormEditable(false);
   };
 
+  // Helper function to validate email format
+  const isValidEmail = (email) => {
+    // Use a regular expression to check email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  // Helper function to validate mobile number format
+  const isValidMobileNumber = (mobileNumber) => {
+    // Use a regular expression to check mobile number format
+    const mobileRegex = /^[0-9]{10}$/; // Assumes a 10-digit mobile number
+    return mobileRegex.test(mobileNumber);
+  };
+
   return (
     <div className="flex flex-col px-6 py-3">
       <h2 className="text-lg font-bold mb-4">Personal Information Form</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+      <form className="flex flex-col gap-4">
         <Label>Faculty ID:</Label>
         <Input
           type="text"
@@ -225,22 +266,49 @@ const PersonalInformation = () => {
           }
         />
 
-        <Label>Aadhar Card:</Label>
-        <Input
-          type="file"
-          // value={aadharDetails}
-          // onChange={(e) => setAadharDetails(e.target.value)}
-          placeholder="Enter your Aadhar details"
-          disabled={!formEditable}
-          className={
-            "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
-          }
-        />
+        <Label>Upload your image:</Label>
+        {imageId ? (
+          <>
+            <CldImage
+              width={250}
+              height={280}
+              crop="fill"
+              src={imageId}
+              alt="image"
+              className="rounded-lg flex flex-col box-border items-center justify-end"
+            />
+
+            {formEditable && (
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  setImageId("");
+                }}
+                className=" w-[300px] text-white py-2 px-4 rounded"
+              >
+                Edit Image
+              </Button>
+            )}
+          </>
+        ) : (
+          <>
+            <CldUploadButton
+              onUpload={(result) => {
+                setImageId(result.info.public_id);
+              }}
+              uploadPreset="artPage"
+              className="w-[80%] sm:w-[65%] text-gray-500 bg-white py-2 px-4 rounded-lg text-left mb-2"
+            >
+              Upload an Image
+            </CldUploadButton>
+          </>
+        )}
 
         {formEditable && (
           <Button
             type="submit"
             className=" mx-auto w-[300px] text-white py-2 px-4 rounded"
+            onClick={handleSubmit}
           >
             Submit Details
           </Button>

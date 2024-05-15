@@ -26,6 +26,7 @@ model User {
   booksPublished      BooksPublished?
   patentsRegistered   PatentsRegistered?
   awardsReceived      AwardsReceived?
+  lecturesDelivered   LecturesDelivered?
 }
 
 model PersonalDetails {
@@ -39,6 +40,7 @@ model PersonalDetails {
   aadharDetails String?
   facultyId     String?
   bloodGroup    String?
+  imageId       String?
 }
 
 model ProfessionalDetails {
@@ -54,6 +56,7 @@ model ProfessionalDetails {
   educationalQualifications EducationalQualification[]
   recognizedAsResearchGuide String?
   yearOfRecognition         String?
+  resumeId                  String?
 }
 
 model EducationalQualification {
@@ -63,6 +66,7 @@ model EducationalQualification {
   yearOfCompletion      String?
   ProfessionalDetails   ProfessionalDetails? @relation(fields: [professionalDetailsId], references: [id])
   professionalDetailsId Int?
+  fileId                String?
 }
 
 model BooksPublished {
@@ -86,6 +90,13 @@ model AwardsReceived {
   awards Award[]
 }
 
+model LecturesDelivered {
+  id       Int       @id @default(autoincrement())
+  user     User      @relation(fields: [email], references: [email])
+  email    String    @unique
+  lectures Lecture[]
+}
+
 model Book {
   id                Int             @id @default(autoincrement())
   title             String?
@@ -94,6 +105,7 @@ model Book {
   dateOfPublication String?
   BooksPublished    BooksPublished? @relation(fields: [booksPublishedId], references: [id])
   booksPublishedId  Int?
+  fileId            String?
 }
 
 model Patent {
@@ -107,6 +119,7 @@ model Patent {
   publishedYear       String?
   PatentsRegistered   PatentsRegistered? @relation(fields: [patentsRegisteredId], references: [id])
   patentsRegisteredId Int?
+  fileId              String?
 }
 
 model Award {
@@ -119,4 +132,18 @@ model Award {
   hasFellowship    String?
   AwardsReceived   AwardsReceived? @relation(fields: [awardsReceivedId], references: [id])
   awardsReceivedId Int?
+  fileId           String?
+}
+
+model Lecture {
+  id                  Int                @id @default(autoincrement())
+  title               String?
+  dateDelivered       String?
+  venue               String?
+  organization        String?
+  audience            String?
+  description         String?
+  fileProof           String?
+  LecturesDelivered   LecturesDelivered? @relation(fields: [lecturesDeliveredId], references: [id])
+  lecturesDeliveredId Int?
 }

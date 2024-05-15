@@ -1,5 +1,213 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { toast } from "sonner";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 
 export const LectureDetails = () => {
-  return <div>LectureDetails</div>;
+  const { data: session } = useSession();
+  const [formEditable, setFormEditable] = useState(true);
+
+  const [lectures, setLectures] = useState([
+    {
+      title: "",
+      dateDelivered: "",
+      venue: "",
+      organization: "",
+      audience: "",
+      description: "",
+      fileProof: "",
+    },
+  ]);
+
+  const handleAddLecture = () => {
+    setLectures([
+      ...lectures,
+      {
+        title: "",
+        dateDelivered: "",
+        venue: "",
+        organization: "",
+        audience: "",
+        description: "",
+        fileProof: "",
+      },
+    ]);
+  };
+
+  const handleDeleteLecture = (index) => {
+    const updatedLectures = [...lectures];
+    updatedLectures.splice(index, 1);
+    setLectures(updatedLectures);
+  };
+
+  const handleLectureChange = (index, field, value) => {
+    const updatedLectures = [...lectures];
+    updatedLectures[index][field] = value;
+    setLectures(updatedLectures);
+  };
+
+  useEffect(() => {
+    getLectureDetails();
+  }, []);
+
+  const getLectureDetails = async () => {
+    const { data } = await axios.get(
+      `/api/lectures-delivered/${session.user.email}`,
+    );
+
+    const reqData = data.lecturesDelivered;
+    console.log(reqData);
+    const formattedLectures = reqData.lectures.map(
+      ({ lecturesDeliveredId, ...rest }) => rest,
+    );
+
+    console.log(formattedLectures);
+    setLectures(formattedLectures);
+    setFormEditable(false);
+    toast("Info loaded");
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Books submitted:", {
+      email: session.user.email,
+      lectures,
+    });
+
+    axios.post("/api/lectures-delivered", {
+      email: session.user.email,
+      lectures,
+    });
+    setFormEditable(false);
+  };
+
+  return (
+    <div className="flex flex-col px-6 py-3">
+      <h2 className="text-lg font-bold mb-4">Lecture Details Form</h2>
+      <form className="flex flex-col gap-4">
+        {lectures.map((lecture, index) => (
+          <div key={index} className="flex flex-col gap-4 w-[80%] ml-8">
+            <h1>Lecture {index + 1}</h1>
+            <Label>Title/Topic of the Lecture:</Label>
+            <Input
+              type="text"
+              placeholder="Title"
+              value={lecture.title}
+              onChange={(e) =>
+                handleLectureChange(index, "title", e.target.value)
+              }
+              disabled={!formEditable}
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+              }
+            />
+            <Label>Date Delivered:</Label>
+            <Input
+              type="text"
+              placeholder="Date Delivered"
+              value={lecture.dateDelivered}
+              onChange={(e) =>
+                handleLectureChange(index, "dateDelivered", e.target.value)
+              }
+              disabled={!formEditable}
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+              }
+            />
+            <Label>Venue/Organization:</Label>
+            <Input
+              type="text"
+              placeholder="Venue/Organization"
+              value={lecture.venue}
+              onChange={(e) =>
+                handleLectureChange(index, "venue", e.target.value)
+              }
+              disabled={!formEditable}
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+              }
+            />
+            <Label>Audience (if applicable):</Label>
+            <Input
+              type="text"
+              placeholder="Audience"
+              value={lecture.audience}
+              onChange={(e) =>
+                handleLectureChange(index, "audience", e.target.value)
+              }
+              disabled={!formEditable}
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+              }
+            />
+            <Label>Brief Description or Highlights:</Label>
+            <Input
+              type="text"
+              placeholder="Description"
+              value={lecture.description}
+              onChange={(e) =>
+                handleLectureChange(index, "description", e.target.value)
+              }
+              disabled={!formEditable}
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+              }
+            />
+            <Label>File proof:</Label>
+            <Input
+              type="text"
+              placeholder="File Proof"
+              value={lecture.fileProof}
+              onChange={(e) =>
+                handleLectureChange(index, "fileProof", e.target.value)
+              }
+              disabled={!formEditable}
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+              }
+            />
+            {formEditable && (
+              <Button
+                type="button"
+                onClick={() => handleDeleteLecture(index)}
+                className="text-white w-[200px] mx-auto bg-red-500"
+              >
+                Delete Lecture
+              </Button>
+            )}
+          </div>
+        ))}
+        {formEditable && (
+          <>
+            <Button
+              type="button"
+              onClick={handleAddLecture}
+              className="mx-auto bg-green-500  w-[500px] text-white py-2 px-4 rounded"
+            >
+              Add Lecture
+            </Button>
+            <Button
+              type="submit"
+              onClick={handleSubmit}
+              className="mx-auto w-[500px] text-white py-2 px-4 rounded"
+            >
+              Submit
+            </Button>
+          </>
+        )}
+
+        {!formEditable && (
+          <Button
+            className="mx-auto w-[300px] text-white py-2 px-4 rounded"
+            onClick={() => setFormEditable(true)}
+          >
+            Edit Details
+          </Button>
+        )}
+      </form>
+    </div>
+  );
 };

@@ -53,6 +53,8 @@ const ExcelDownload = ({ jsonData }) => {
         professionalDetails["Year of Recognition"] =
           item.professionalDetails.yearOfRecognition;
 
+      let isPushed = false;
+
       // Extract books
       if (item.booksPublished?.books) {
         item.booksPublished.books.forEach((book) => {
@@ -60,11 +62,14 @@ const ExcelDownload = ({ jsonData }) => {
 
           if (book.title) rowData.Title = book.title;
           if (book.publishers) rowData.Publishers = book.publishers;
+          if (book.yearOfPublication)
+            rowData.YearOfPublication = book.yearOfPublication;
+          if (book.dateOfPublication)
+            rowData.DateOfPublication = book.dateOfPublication;
 
           data.push(rowData);
+          isPushed = true;
         });
-      } else {
-        // data.push({ ...personalDetails, ...professionalDetails });
       }
 
       // Extract patents
@@ -85,9 +90,8 @@ const ExcelDownload = ({ jsonData }) => {
             rowData["Published Year"] = patent.publishedYear;
 
           data.push(rowData);
+          isPushed = true;
         });
-      } else {
-        // data.push({ ...personalDetails, ...professionalDetails });
       }
 
       // Extract awards
@@ -105,9 +109,12 @@ const ExcelDownload = ({ jsonData }) => {
             rowData["Has Fellowship"] = award.hasFellowship;
 
           data.push(rowData);
+          isPushed = true;
         });
-      } else {
-        // data.push({ ...personalDetails, ...professionalDetails });
+      }
+
+      if (!isPushed) {
+        data.push({ ...personalDetails, ...professionalDetails });
       }
     });
 
@@ -118,7 +125,11 @@ const ExcelDownload = ({ jsonData }) => {
     XLSX.writeFile(wb, "FacultyInformation.xlsx");
   };
 
-  return <Button onClick={downloadExcel}>Download Excel</Button>;
+  return (
+    <Button onClick={downloadExcel} className="text-white mt-4 bg-red-500">
+      Download Excel
+    </Button>
+  );
 };
 
 export default ExcelDownload;

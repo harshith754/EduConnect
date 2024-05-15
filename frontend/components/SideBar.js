@@ -72,7 +72,20 @@ const SideBar = () => {
               >
                 Patents registered
               </div>
-              {/* <div
+              <div
+                className={`p-2 ${selectedTab === "appreciation-awards" ? "font-bold" : ""}`}
+                onClick={() => handleAccordionClick("appreciation-awards")}
+              >
+                Appreciation and Awards
+              </div>
+              <div
+                className={`p-2 ${selectedTab === "lecture-details" ? "font-bold" : ""}`}
+                onClick={() => handleAccordionClick("lecture-details")}
+              >
+                Guest Lecture/Expert Lecture Delivered
+              </div>
+
+              <div
                 className={`p-2 ${selectedTab === "financial-support" ? "font-bold" : ""}`}
                 onClick={() => handleAccordionClick("financial-support")}
               >
@@ -83,12 +96,6 @@ const SideBar = () => {
                 onClick={() => handleAccordionClick("teachers-fdp")}
               >
                 Teachers Undergoing FDPs/MDPs
-              </div> */}
-              <div
-                className={`p-2 ${selectedTab === "appreciation-awards" ? "font-bold" : ""}`}
-                onClick={() => handleAccordionClick("appreciation-awards")}
-              >
-                Appreciation and Awards
               </div>
               <div
                 className={`p-2 ${selectedTab === "granted-fellowship" ? "font-bold" : ""}`}
@@ -109,12 +116,7 @@ const SideBar = () => {
               >
                 Institutional and Department Committee Details
               </div>
-              <div
-                className={`p-2 ${selectedTab === "lecture-details" ? "font-bold" : ""}`}
-                onClick={() => handleAccordionClick("lecture-details")}
-              >
-                Guest Lecture/Expert Lecture Delivered
-              </div>
+
               <div
                 className={`p-2 ${selectedTab === "activities-details" ? "font-bold" : ""}`}
                 onClick={() => handleAccordionClick("activities-details")}
@@ -137,17 +139,18 @@ const SideBar = () => {
             </AccordionTrigger>
             <AccordionContent className="text-xs pl-4 flex flex-col divide-y divide-primary-foreground">
               <div
+                className={`p-2 ${selectedTab === "faculty-display" ? "font-bold" : ""}`}
+                onClick={() => handleAccordionClick("faculty-display")}
+              >
+                All Faculties
+              </div>
+
+              <div
                 className={`p-2 ${selectedTab === "get-information" ? "font-bold" : ""}`}
                 onClick={() => handleAccordionClick("get-information")}
               >
                 Get Faculty Information
               </div>
-              {/* <div
-                className={`p-2 ${selectedTab === "professional-details" ? "font-bold" : ""}`}
-                onClick={() => handleAccordionClick("professional-details")}
-              >
-                a2
-              </div> */}
             </AccordionContent>
           </AccordionItem>
         </Accordion>

@@ -16,69 +16,62 @@ export const FacultyInformation = () => {
   const availableFields = [
     {
       title: "User",
+      fields: ["email", "name"],
+    },
+    {
+      title: "PersonalDetails",
       fields: [
-        "email",
-        "name",
-        {
-          title: "PersonalDetails",
-          fields: [
-            "fullName",
-            "gender",
-            "dateOfBirth",
-            "mobileNumber",
-            "aadharDetails",
-            "facultyId",
-            "bloodGroup",
-          ],
-        },
-        {
-          title: "ProfessionalDetails",
-          fields: [
-            "email",
-            "department",
-            "designation",
-            "dateOfJoining",
-            "highestQualification",
-            "teachingExperience",
-            "instituteExperience",
-            "recognizedAsResearchGuide",
-            "yearOfRecognition",
-          ],
-        },
-        {
-          title: "BooksPublished",
-          fields: [
-            "title",
-            "publishers",
-            "yearOfPublication",
-            "dateOfPublication",
-          ],
-        },
-        {
-          title: "PatentsRegistered",
-          fields: [
-            "patentType",
-            "applicationNo",
-            "patentTitle",
-            "publicationDate",
-            "formFillingDate",
-            "authorList",
-            "publishedYear",
-          ],
-        },
-        {
-          title: "AwardsReceived",
-          fields: [
-            "awardName",
-            "agencyName",
-            "agencyEmail",
-            "agencyAddress",
-            "yearReceived",
-            "hasFellowship",
-          ],
-        },
+        "fullName",
+        "gender",
+        "dateOfBirth",
+        "mobileNumber",
+        "aadharDetails",
+        "facultyId",
+        "bloodGroup",
       ],
     },
+    {
+      title: "ProfessionalDetails",
+      fields: [
+        "email",
+        "department",
+        "designation",
+        "dateOfJoining",
+        "highestQualification",
+        "teachingExperience",
+        "instituteExperience",
+        // "recognizedAsResearchGuide",
+        "yearOfRecognition",
+      ],
+    },
+    {
+      title: "BooksPublished",
+      fields: ["title", "publishers", "yearOfPublication", "dateOfPublication"],
+    },
+    {
+      title: "PatentsRegistered",
+      fields: [
+        "patentType",
+        "applicationNo",
+        "patentTitle",
+        "publicationDate",
+        "formFillingDate",
+        "authorList",
+        "publishedYear",
+      ],
+    },
+    {
+      title: "AwardsReceived",
+      fields: [
+        "awardName",
+        "agencyName",
+        "agencyEmail",
+        "agencyAddress",
+        "yearReceived",
+        "hasFellowship",
+      ],
+    },
+    ,
   ];
 
   const handleCheckboxChange = (fieldName, category) => {
@@ -91,24 +84,66 @@ export const FacultyInformation = () => {
       );
       setSelectedFields(updatedFields);
 
-      // Check if the category title is not used by other selected fields
-      const isCategoryTitleUsed = selectedFields.some(
-        (field) => typeof field !== "string" && field.title === category,
-      );
+      const isCategoryTitleUsed = availableFields.some((table) => {
+        if (table.title === category) {
+          const isFieldUsed = table.fields.some((field) => {
+            return selectedFields.includes(field);
+          });
+
+          return isFieldUsed; // Return true if a field is found, false otherwise
+        }
+        return false; // Continue iterating if the current table is not the one we're looking for
+      });
+
       if (!isCategoryTitleUsed) {
-        setSelectedTitles(selectedTitles.filter((title) => title !== category));
+        const updatedTitles = selectedTitles.filter(
+          (title) => title !== category,
+        );
+        setSelectedTitles(updatedTitles);
       }
     } else {
-      // Field is not selected, add it to the list
       const updatedFields = [...selectedFields, fieldName];
       setSelectedFields(updatedFields);
 
-      // Check if the category title is not already added
-      const isCategoryTitleAdded = selectedTitles.includes(category);
-      if (!isCategoryTitleAdded) {
+      if (!selectedTitles.includes(category)) {
         setSelectedTitles([...selectedTitles, category]);
       }
     }
+  };
+
+  const handleTableCheckboxChange = (title) => {
+    const isSelected = selectedTitles.includes(title);
+    let updatedFields = [...selectedFields];
+    let updatedTitles = [...selectedTitles];
+
+    if (isSelected) {
+      // Deselect all fields within the table title
+      updatedFields = updatedFields.filter((field) => {
+        if (typeof field === "string") {
+          // For string fields, filter out fields within the specified title
+          const categoryForField = availableFields.find((table) =>
+            table.fields.includes(field),
+          );
+          return !(categoryForField && categoryForField.title === title);
+        } else {
+          // For object fields (titles), keep them if they don't match the specified title
+          return field.title !== title;
+        }
+      });
+      updatedTitles = updatedTitles.filter(
+        (selectedTitle) => selectedTitle !== title,
+      );
+    } else {
+      // Select all fields within the table title
+      const table = availableFields.find((table) => table.title === title);
+      if (table) {
+        updatedFields = [...updatedFields, ...table.fields];
+        updatedTitles = [...updatedTitles, title];
+      }
+    }
+
+    setSelectedFields(updatedFields);
+    setSelectedTitles(updatedTitles);
   };
 
   const handleSubmit = async (e) => {
@@ -117,6 +152,7 @@ export const FacultyInformation = () => {
 
     setDataAvailable(false);
 
+    console.log(selectedFields, selectedTitles);
     const { data } = await axios.post("/api/get-information", {
       selectedFields,
       selectedTitles,
@@ -153,42 +189,33 @@ export const FacultyInformation = () => {
 
   const renderCheckboxes = () => {
     return (
-      <div className="flex flex-col divide-y-2 pl-5">
+      <div className="flex flex-wrap pl-5 py-2 gap-3">
         {availableFields.map((table) => (
-          <div key={table.title}>
-            <h1>{table.title}:</h1>
-            <div className="flex flex-col">
-              {Array.isArray(table.fields) &&
-                table.fields.map((field) =>
-                  typeof field === "string" ? (
-                    <div className="flex flex-row gap-3 py-1 px-3">
-                      <Checkbox
-                        checked={selectedFields.includes(field)}
-                        onCheckedChange={() =>
-                          handleCheckboxChange(field, table.title)
-                        }
-                      />
-                      <Label key={field}>{field}</Label>
-                    </div>
-                  ) : (
-                    <div key={field.title}>
-                      <h2>{field.title}</h2>
-                      {Array.isArray(field.fields) &&
-                        field.fields.map((subField) => (
-                          <div className="flex flex-row gap-3 py-1 px-3">
-                            <Checkbox
-                              checked={selectedFields.includes(subField)}
-                              onCheckedChange={() =>
-                                handleCheckboxChange(subField, field.title)
-                              }
-                            />
+          <div
+            key={table.title}
+            className="rounded-md shadow-md pb-2  w-[200px]"
+          >
+            <div className="flex flex-row gap-3 px-3 items-center bg-primary-foreground rounded-t-md">
+              <Checkbox
+                checked={selectedTitles.includes(table.title)}
+                onCheckedChange={() => handleTableCheckboxChange(table.title)}
+                className="w-4 h-4"
+              />
+              <div className="font-semibold">{table.title}:</div>
+            </div>
 
-                            <Label key={subField}>{subField}</Label>
-                          </div>
-                        ))}
-                    </div>
-                  ),
-                )}
+            <div className="flex flex-col">
+              {table.fields.map((field) => (
+                <div className="flex flex-row gap-3 py-1 px-3">
+                  <Checkbox
+                    checked={selectedFields.includes(field)}
+                    onCheckedChange={() =>
+                      handleCheckboxChange(field, table.title)
+                    }
+                  />
+                  <Label key={field}>{field}</Label>
+                </div>
+              ))}
             </div>
           </div>
         ))}
@@ -214,7 +241,9 @@ export const FacultyInformation = () => {
             ))}
           </ul>
 
-          <Button onClick={handleSubmit}>Get Information</Button>
+          <Button onClick={handleSubmit} className="text-white mt-5">
+            Get Information
+          </Button>
 
           {dataAvailable && (
             <>
@@ -222,8 +251,8 @@ export const FacultyInformation = () => {
             </>
           )}
         </div>
-        {/* 
-        <div>
+
+        {/* <div>
           <h1 className="text-lg font-bold mb-4">Selected Categories</h1>
           <ul>
             {selectedTitles.map((title, index) => (
