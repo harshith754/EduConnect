@@ -36,14 +36,18 @@ const SideBar = () => {
       </div>
 
       <div className=" text-sm px-5 flex flex-col divide-y ">
+        {/* Accordion 1 */}
         <Accordion type="multiple">
-          <AccordionItem value="item-1">
+          <AccordionItem value="dashboard-section">
             <AccordionTrigger>
               <div
-                className="flex-row justify-center items-center"
+                className="flex flex-row justify-center items-center"
                 onClick={() => handleAccordionClick("dashboard")}
               >
-                <LayoutDashboard className="inline-block mr-2" color="orange" />
+                <LayoutDashboard
+                  className="inline-block mr-2"
+                  style={{ color: "orange" }}
+                />
                 Dashboard
               </div>
             </AccordionTrigger>
@@ -84,30 +88,29 @@ const SideBar = () => {
               >
                 Guest Lecture/Expert Lecture Delivered
               </div>
-
+              <div
+                className={`p-2 ${selectedTab === "research-paper" ? "font-bold" : ""}`}
+                onClick={() => handleAccordionClick("research-paper")}
+              >
+                Research Paper Information
+              </div>
               <div
                 className={`p-2 ${selectedTab === "financial-support" ? "font-bold" : ""}`}
                 onClick={() => handleAccordionClick("financial-support")}
               >
-                Financial Support and Development Programs
+                Financial Support for Conferences/Workshops
               </div>
-              <div
+              {/* <div
                 className={`p-2 ${selectedTab === "teachers-fdp" ? "font-bold" : ""}`}
                 onClick={() => handleAccordionClick("teachers-fdp")}
               >
                 Teachers Undergoing FDPs/MDPs
-              </div>
+              </div> */}
               <div
                 className={`p-2 ${selectedTab === "granted-fellowship" ? "font-bold" : ""}`}
                 onClick={() => handleAccordionClick("granted-fellowship")}
               >
                 Granted National/International Fellowship/Financial Support
-              </div>
-              <div
-                className={`p-2 ${selectedTab === "consultancy-revenue" ? "font-bold" : ""}`}
-                onClick={() => handleAccordionClick("consultancy-revenue")}
-              >
-                Consultancy and Corporate Training Revenue
               </div>
 
               <div
@@ -116,24 +119,34 @@ const SideBar = () => {
               >
                 Institutional and Department Committee Details
               </div>
-
               <div
                 className={`p-2 ${selectedTab === "activities-details" ? "font-bold" : ""}`}
                 onClick={() => handleAccordionClick("activities-details")}
               >
                 Co-curricular/Extracurricular Activities
               </div>
+              <div
+                className={`p-2 ${selectedTab === "consultancy-revenue" ? "font-bold" : ""}`}
+                onClick={() => handleAccordionClick("consultancy-revenue")}
+              >
+                Consultancy and Corporate Training Revenue
+              </div>
             </AccordionContent>
           </AccordionItem>
         </Accordion>
+
+        {/* Accordion 2 */}
         <Accordion type="multiple">
-          <AccordionItem value="item-1">
+          <AccordionItem value="analytics-section">
             <AccordionTrigger>
               <div
-                className="flex-row justify-center items-center"
-                onClick={() => handleAccordionClick("dashboard")}
+                className="flex flex-row justify-center items-center"
+                onClick={() => handleAccordionClick("analytics")}
               >
-                <LineChart className="inline-block mr-2" color="orange" />
+                <LineChart
+                  className="inline-block mr-2"
+                  style={{ color: "orange" }}
+                />
                 Analytics
               </div>
             </AccordionTrigger>
@@ -144,7 +157,6 @@ const SideBar = () => {
               >
                 All Faculties
               </div>
-
               <div
                 className={`p-2 ${selectedTab === "get-information" ? "font-bold" : ""}`}
                 onClick={() => handleAccordionClick("get-information")}
@@ -154,27 +166,6 @@ const SideBar = () => {
             </AccordionContent>
           </AccordionItem>
         </Accordion>
-        {/* <Accordion type="multiple">
-          <AccordionItem value="item-1">
-            <AccordionTrigger>
-              <div
-                className="flex-row justify-center items-center"
-                onClick={() => handleAccordionClick("dashboard")}
-              >
-                <Settings className="inline-block mr-2" color="orange" />
-                Settings
-              </div>
-            </AccordionTrigger>
-            <AccordionContent className="text-xs pl-4 flex flex-col divide-y divide-primary-foreground">
-              <div
-                className={`p-2 ${selectedTab === "professional-details" ? "font-bold" : ""}`}
-                onClick={() => handleAccordionClick("professional-details")}
-              >
-                a2
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion> */}
       </div>
 
       <div className="mx-auto text-xs w-[200px] rounded-3xl shadow-lg p-5 px-6 bg-zince-300/10 flex flex-col gap-2 my-6">

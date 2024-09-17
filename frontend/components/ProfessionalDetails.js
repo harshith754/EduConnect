@@ -237,7 +237,7 @@ const ProfessionalDetails = () => {
         </Select>
         <Label>Date of Joining:</Label>
         <Input
-          type="text"
+          type="date"
           placeholder="MM/YYYY"
           value={dateOfJoining}
           onChange={(e) => {

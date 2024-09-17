@@ -3,11 +3,13 @@ import { db } from "@/lib/db";
 
 export async function POST(req) {
   try {
-    const { email, lectures } = await req.json();
+    const { email, researchPapers } = await req.json();
 
-    console.log({ email, lectures });
+    console.log({ email, researchPapers });
 
-    const Nlectures = lectures.map(({ lecturesDeliveredId, ...rest }) => rest);
+    const NresearchPapers = researchPapers.map(
+      ({ papersPublishedId, ...rest }) => rest,
+    );
 
     // Check if the user already has book details
 
@@ -16,30 +18,28 @@ export async function POST(req) {
         email: email,
       },
       include: {
-        lecturesDelivered: true,
+        papersPublished: true,
       },
     });
 
-    if (user && user.lecturesDelivered) {
-      // Professional details exist, update them
-
+    if (user && user.papersPublished) {
+      // papers published exist, update them
       console.log("updating..");
-      await db.lecture.deleteMany({
+      await db.paper.deleteMany({
         where: {
-          lecturesDeliveredId: user.lecturesDelivered.id,
+          papersPublishedId: user.papersPublished.id,
         },
       });
 
-      await db.lecturesDelivered.delete({
+      await db.papersPublished.delete({
         where: {
           email: email,
         },
       });
-
-      const createdlecturesDelivered = await db.lecturesDelivered.create({
+      const createdpapersPublished = await db.papersPublished.create({
         data: {
-          lectures: {
-            create: Nlectures,
+          papers: {
+            create: NresearchPapers,
           },
           user: {
             connect: {
@@ -49,10 +49,10 @@ export async function POST(req) {
         },
       });
     } else {
-      const createdlecturesDelivered = await db.lecturesDelivered.create({
+      const createdpapersPublished = await db.papersPublished.create({
         data: {
-          lectures: {
-            create: Nlectures,
+          papers: {
+            create: NresearchPapers,
           },
           user: {
             connect: {
@@ -63,14 +63,14 @@ export async function POST(req) {
       });
     }
     return NextResponse.json(
-      { message: "lecturesDelivered Created/Updated." },
+      { message: "papersPublished Created/Updated." },
       { status: 201 },
     );
   } catch (error) {
-    console.error("Error creating/updating lecturesDelivered:", error);
+    console.error("Error creating/updating papersPublished:", error);
     return NextResponse.json(
       {
-        message: "An error occurred while creating/updating lecturesDelivered.",
+        message: "An error occurred while creating/updating papersPublished.",
       },
       { status: 500 },
     );

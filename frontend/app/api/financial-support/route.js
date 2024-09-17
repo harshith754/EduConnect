@@ -3,43 +3,43 @@ import { db } from "@/lib/db";
 
 export async function POST(req) {
   try {
-    const { email, lectures } = await req.json();
+    const { email, financialSupport } = await req.json();
 
-    console.log({ email, lectures });
+    console.log({ email, financialSupport });
 
-    const Nlectures = lectures.map(({ lecturesDeliveredId, ...rest }) => rest);
-
-    // Check if the user already has book details
+    const NfinancialSupport = financialSupport.map(
+      ({ financialSupportId, ...rest }) => rest,
+    );
 
     const user = await db.user.findUnique({
       where: {
         email: email,
       },
       include: {
-        lecturesDelivered: true,
+        financialSupport: true,
       },
     });
 
-    if (user && user.lecturesDelivered) {
+    if (user && user.financialSupport) {
       // Professional details exist, update them
 
       console.log("updating..");
-      await db.lecture.deleteMany({
+      await db.support.deleteMany({
         where: {
-          lecturesDeliveredId: user.lecturesDelivered.id,
+          financialSupportId: user.financialSupport.id,
         },
       });
 
-      await db.lecturesDelivered.delete({
+      await db.financialSupport.delete({
         where: {
           email: email,
         },
       });
 
-      const createdlecturesDelivered = await db.lecturesDelivered.create({
+      const createdfinancialSupport = await db.financialSupport.create({
         data: {
-          lectures: {
-            create: Nlectures,
+          supports: {
+            create: NfinancialSupport,
           },
           user: {
             connect: {
@@ -49,10 +49,10 @@ export async function POST(req) {
         },
       });
     } else {
-      const createdlecturesDelivered = await db.lecturesDelivered.create({
+      const createdfinancialSupport = await db.financialSupport.create({
         data: {
-          lectures: {
-            create: Nlectures,
+          supports: {
+            create: NfinancialSupport,
           },
           user: {
             connect: {
@@ -63,14 +63,14 @@ export async function POST(req) {
       });
     }
     return NextResponse.json(
-      { message: "lecturesDelivered Created/Updated." },
+      { message: "Financial Support Created/Updated." },
       { status: 201 },
     );
   } catch (error) {
-    console.error("Error creating/updating lecturesDelivered:", error);
+    console.error("Error creating/updating financialSupport:", error);
     return NextResponse.json(
       {
-        message: "An error occurred while creating/updating lecturesDelivered.",
+        message: "An error occurred while creating/updating financialSupport.",
       },
       { status: 500 },
     );

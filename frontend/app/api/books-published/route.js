@@ -7,6 +7,8 @@ export async function POST(req) {
 
     console.log({ email, books });
 
+    const Nbooks = books.map(({ booksPublishedId, ...rest }) => rest);
+
     // Check if the user already has book details
 
     const user = await db.user.findUnique({
@@ -37,7 +39,7 @@ export async function POST(req) {
       const createdBooksPublished = await db.booksPublished.create({
         data: {
           books: {
-            create: books,
+            create: Nbooks,
           },
           user: {
             connect: {
@@ -50,7 +52,7 @@ export async function POST(req) {
       const createdBooksPublished = await db.booksPublished.create({
         data: {
           books: {
-            create: books,
+            create: Nbooks,
           },
           user: {
             connect: {

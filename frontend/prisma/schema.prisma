@@ -27,6 +27,51 @@ model User {
   patentsRegistered   PatentsRegistered?
   awardsReceived      AwardsReceived?
   lecturesDelivered   LecturesDelivered?
+  papersPublished     PapersPublished?
+  financialSupport    FinancialSupport? //for workshops
+  fellowshipSupport   FellowshipSupport?
+}
+
+model FellowshipSupport {
+  id          Int          @id @default(autoincrement())
+  user        User         @relation(fields: [email], references: [email])
+  email       String       @unique
+  fellowships Fellowship[]
+}
+
+model Fellowship {
+  id                  Int                @id @default(autoincrement())
+  nameOfFellowship    String?
+  financialSupport    String?
+  purposeOfGrant      String?
+  statureOfFellowship String?
+  awardingAgency      String?
+  dateOfAward         String?
+  certificate         String? // Certificate upload field
+  FellowshipSupport   FellowshipSupport? @relation(fields: [fellowshipSupportId], references: [id])
+  fellowshipSupportId Int?
+}
+
+model FinancialSupport {
+  id       Int       @id @default(autoincrement())
+  user     User      @relation(fields: [email], references: [email])
+  email    String    @unique
+  supports Support[]
+}
+
+model Support {
+  id              Int     @id @default(autoincrement())
+  title           String?
+  dateFrom        String?
+  dateTo          String?
+  membershipFee   String?
+  travelExpenses  String?
+  registrationFee String?
+  certificate     String?
+
+  amountProvided     String?
+  FinancialSupport   FinancialSupport? @relation(fields: [financialSupportId], references: [id])
+  financialSupportId Int?
 }
 
 model PersonalDetails {
@@ -76,36 +121,25 @@ model BooksPublished {
   books Book[]
 }
 
-model PatentsRegistered {
-  id      Int      @id @default(autoincrement())
-  user    User     @relation(fields: [email], references: [email])
-  email   String   @unique
-  patents Patent[]
-}
-
-model AwardsReceived {
-  id     Int     @id @default(autoincrement())
-  user   User    @relation(fields: [email], references: [email])
-  email  String  @unique
-  awards Award[]
-}
-
-model LecturesDelivered {
-  id       Int       @id @default(autoincrement())
-  user     User      @relation(fields: [email], references: [email])
-  email    String    @unique
-  lectures Lecture[]
-}
-
 model Book {
   id                Int             @id @default(autoincrement())
   title             String?
   publishers        String?
   yearOfPublication String?
   dateOfPublication String?
+  ISBN              String?
+  chapters          String?
+  coAuthors         String?
   BooksPublished    BooksPublished? @relation(fields: [booksPublishedId], references: [id])
   booksPublishedId  Int?
   fileId            String?
+}
+
+model PatentsRegistered {
+  id      Int      @id @default(autoincrement())
+  user    User     @relation(fields: [email], references: [email])
+  email   String   @unique
+  patents Patent[]
 }
 
 model Patent {
@@ -122,6 +156,13 @@ model Patent {
   fileId              String?
 }
 
+model AwardsReceived {
+  id     Int     @id @default(autoincrement())
+  user   User    @relation(fields: [email], references: [email])
+  email  String  @unique
+  awards Award[]
+}
+
 model Award {
   id               Int             @id @default(autoincrement())
   awardName        String?
@@ -135,6 +176,13 @@ model Award {
   fileId           String?
 }
 
+model LecturesDelivered {
+  id       Int       @id @default(autoincrement())
+  user     User      @relation(fields: [email], references: [email])
+  email    String    @unique
+  lectures Lecture[]
+}
+
 model Lecture {
   id                  Int                @id @default(autoincrement())
   title               String?
@@ -146,4 +194,23 @@ model Lecture {
   fileProof           String?
   LecturesDelivered   LecturesDelivered? @relation(fields: [lecturesDeliveredId], references: [id])
   lecturesDeliveredId Int?
+}
+
+model PapersPublished {
+  id     Int     @id @default(autoincrement())
+  user   User    @relation(fields: [email], references: [email])
+  email  String  @unique
+  papers Paper[]
+}
+
+model Paper {
+  id                Int              @id @default(autoincrement())
+  title             String?
+  authors           String?
+  yearOfPublication String?
+  dateOfPublication String?
+  linkToArticle     String?
+  numberOfCitations String?
+  PapersPublished   PapersPublished? @relation(fields: [papersPublishedId], references: [id])
+  papersPublishedId Int?
 }

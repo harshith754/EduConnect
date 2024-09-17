@@ -5,6 +5,7 @@ import { Label } from "./ui/label";
 import { toast } from "sonner";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { CldImage, CldUploadButton } from "next-cloudinary";
 
 export const LectureDetails = () => {
   const { data: session } = useSession();
@@ -57,7 +58,7 @@ export const LectureDetails = () => {
     const { data } = await axios.get(
       `/api/lectures-delivered/${session.user.email}`,
     );
-
+    if (data.lecturesDelivered === null) return;
     const reqData = data.lecturesDelivered;
     console.log(reqData);
     const formattedLectures = reqData.lectures.map(
@@ -156,19 +157,48 @@ export const LectureDetails = () => {
                 "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
               }
             />
-            <Label>File proof:</Label>
-            <Input
-              type="text"
-              placeholder="File Proof"
-              value={lecture.fileProof}
-              onChange={(e) =>
-                handleLectureChange(index, "fileProof", e.target.value)
-              }
-              disabled={!formEditable}
-              className={
-                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
-              }
-            />
+            <Label>File Upload:</Label>
+            {lecture.fileProof && lecture.fileProof !== "" ? (
+              <>
+                <CldImage
+                  width={250}
+                  height={280}
+                  crop="fill"
+                  src={lecture.fileProof}
+                  alt="image"
+                  className="rounded-lg flex flex-col box-border items-center justify-end"
+                />
+
+                {formEditable && (
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleLectureChange(index, "fileProof", "");
+                    }}
+                    className=" w-[300px] text-white py-2 px-4 rounded"
+                  >
+                    Edit File
+                  </Button>
+                )}
+              </>
+            ) : (
+              <>
+                <CldUploadButton
+                  onUpload={(result) => {
+                    handleLectureChange(
+                      index,
+                      "fileProof",
+                      result.info.public_id,
+                    );
+                  }}
+                  uploadPreset="artPage"
+                  className="w-[80%] sm:w-[65%] text-gray-500 bg-white py-2 px-4 rounded-lg text-left mb-2"
+                  disabled={!formEditable}
+                >
+                  Upload an Image
+                </CldUploadButton>
+              </>
+            )}
             {formEditable && (
               <Button
                 type="button"

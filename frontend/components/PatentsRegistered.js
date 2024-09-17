@@ -5,6 +5,7 @@ import { Label } from "./ui/label";
 import { toast } from "sonner"; // Assuming this is for notifications
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { CldImage, CldUploadButton } from "next-cloudinary";
 
 export const PatentsRegistered = () => {
   const { data: session } = useSession();
@@ -18,6 +19,7 @@ export const PatentsRegistered = () => {
       formFillingDate: "",
       authorList: "",
       publishedYear: "",
+      fileId: "",
     },
   ]);
 
@@ -32,6 +34,7 @@ export const PatentsRegistered = () => {
         formFillingDate: "",
         authorList: "",
         publishedYear: "",
+        fileId: "",
       },
     ]);
   };
@@ -60,9 +63,14 @@ export const PatentsRegistered = () => {
       `/api/patents-registered/${session.user.email}`,
     );
 
+    if (data.patentsRegistered === null) return;
     const reqData = data.patentsRegistered;
     console.log(reqData);
     const formattedPatents = reqData.patents.map(({ id, ...rest }) => rest);
+
+    if (formattedPatents.length === 0) {
+      return;
+    }
     setPatents(formattedPatents);
     setFormEditable(false);
     toast("Patent info loaded");
@@ -131,7 +139,7 @@ export const PatentsRegistered = () => {
             />
             <Label>Publication Date:</Label>
             <Input
-              type="text"
+              type="date"
               placeholder="Publication Date"
               value={patent.publicationDate}
               onChange={(e) =>
@@ -142,9 +150,10 @@ export const PatentsRegistered = () => {
                 "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
               }
             />
+
             <Label>Form Filling Date:</Label>
             <Input
-              type="text"
+              type="date"
               placeholder="Form Filling Date"
               value={patent.formFillingDate}
               onChange={(e) =>
@@ -181,6 +190,43 @@ export const PatentsRegistered = () => {
                 "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
               }
             />
+            <Label>File Upload:</Label>
+            {patent.fileId && patent.fileId !== "" ? (
+              <>
+                <CldImage
+                  width={250}
+                  height={280}
+                  crop="fill"
+                  src={patent.fileId}
+                  alt="image"
+                  className="rounded-lg flex flex-col box-border items-center justify-end"
+                />
+
+                {formEditable && (
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handlePatentChange(index, "fileId", "");
+                    }}
+                    className=" w-[300px] text-white py-2 px-4 rounded"
+                  >
+                    Edit File
+                  </Button>
+                )}
+              </>
+            ) : (
+              <>
+                <CldUploadButton
+                  onUpload={(result) => {
+                    handlePatentChange(index, "fileId", result.info.public_id);
+                  }}
+                  uploadPreset="artPage"
+                  className="w-[80%] sm:w-[65%] text-gray-500 bg-white py-2 px-4 rounded-lg text-left mb-2"
+                >
+                  Upload an Image
+                </CldUploadButton>
+              </>
+            )}
             {formEditable && (
               <Button
                 type="button"

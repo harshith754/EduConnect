@@ -5,16 +5,21 @@ import { Label } from "./ui/label";
 import { toast } from "sonner";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { CldImage, CldUploadButton } from "next-cloudinary";
 
 export const BookPublished = () => {
   const { data: session } = useSession();
 
   const [books, setBooks] = useState([
     {
+      ISBN: "",
       title: "",
+      chapters: " ",
       publishers: "",
+      coAuthors: "",
       yearOfPublication: "",
       dateOfPublication: "",
+      fileId: "",
     },
   ]);
 
@@ -22,10 +27,14 @@ export const BookPublished = () => {
     setBooks([
       ...books,
       {
+        ISBN: "",
         title: "",
+        chapters: " ",
         publishers: "",
+        coAuthors: "",
         yearOfPublication: "",
         dateOfPublication: "",
+        fileId: "",
       },
     ]);
   };
@@ -53,6 +62,7 @@ export const BookPublished = () => {
       `/api/books-published/${session.user.email}`,
     );
 
+    if (data.booksPublished === null) return;
     const reqData = data.booksPublished;
     console.log(reqData);
     const formattedBooks = reqData.books.map(({ id, ...rest }) => rest);
@@ -83,12 +93,50 @@ export const BookPublished = () => {
         {books.map((book, index) => (
           <div key={index} className="flex flex-col gap-4 w-[80%] ml-8">
             <h1>Book {index + 1}</h1>
+
+            <Label>ISBN number:</Label>
+            <Input
+              type="text"
+              placeholder="ISBN number"
+              value={book.ISBN}
+              onChange={(e) => handleBookChange(index, "ISBN", e.target.value)}
+              disabled={!formEditable}
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+              }
+            />
             <Label>Title of the book:</Label>
             <Input
               type="text"
               placeholder="Title"
               value={book.title}
               onChange={(e) => handleBookChange(index, "title", e.target.value)}
+              disabled={!formEditable}
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+              }
+            />
+            <Label>Title of the Chapters:</Label>
+            <Input
+              type="text"
+              placeholder="Chapters published"
+              value={book.chapters}
+              onChange={(e) =>
+                handleBookChange(index, "chapters", e.target.value)
+              }
+              disabled={!formEditable}
+              className={
+                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+              }
+            />
+            <Label>Name of co-authors:</Label>
+            <Input
+              type="text"
+              placeholder="coAuthors"
+              value={book.coAuthors}
+              onChange={(e) =>
+                handleBookChange(index, "coAuthors", e.target.value)
+              }
               disabled={!formEditable}
               className={
                 "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
@@ -122,7 +170,7 @@ export const BookPublished = () => {
             />
             <Label>Date of Publication:</Label>
             <Input
-              type="text"
+              type="date"
               placeholder="DD/MM/YYYY"
               value={book.dateOfPublication}
               onChange={(e) =>
@@ -133,6 +181,45 @@ export const BookPublished = () => {
                 "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
               }
             />
+
+            <Label>File Upload:</Label>
+            {book.fileId && book.fileId !== "" ? (
+              <>
+                <CldImage
+                  width={250}
+                  height={280}
+                  crop="fill"
+                  src={book.fileId}
+                  alt="image"
+                  className="rounded-lg flex flex-col box-border items-center justify-end"
+                />
+
+                {formEditable && (
+                  <Button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleBookChange(index, "fileId", "");
+                    }}
+                    className=" w-[300px] text-white py-2 px-4 rounded"
+                  >
+                    Edit File
+                  </Button>
+                )}
+              </>
+            ) : (
+              <>
+                <CldUploadButton
+                  onUpload={(result) => {
+                    handleBookChange(index, "fileId", result.info.public_id);
+                  }}
+                  uploadPreset="artPage"
+                  className="w-[80%] sm:w-[65%] text-gray-500 bg-white py-2 px-4 rounded-lg text-left mb-2"
+                >
+                  Upload an Image
+                </CldUploadButton>
+              </>
+            )}
+
             {formEditable && (
               <Button
                 type="button"

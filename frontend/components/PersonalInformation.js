@@ -179,7 +179,7 @@ const PersonalInformation = () => {
         <Label>Date of Birth:</Label>
 
         <Input
-          type="text"
+          type="date"
           value={dateOfBirth}
           onChange={(e) => setDateOfBirth(e.target.value)}
           placeholder="DD/MM/YYYY"

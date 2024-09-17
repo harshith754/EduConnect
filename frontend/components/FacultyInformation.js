@@ -245,7 +245,7 @@ export const FacultyInformation = () => {
             Get Information
           </Button>
 
-          {dataAvailable && (
+          {dataAvailable && data && (
             <>
               <ExcelDownload jsonData={data} selectedTitles={selectedTitles} />
             </>

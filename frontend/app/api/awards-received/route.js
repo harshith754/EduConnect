@@ -7,6 +7,8 @@ export async function POST(req) {
 
     console.log({ email, awards });
 
+    const Nawards = awards.map(({ awardsReceivedId, ...rest }) => rest);
+
     // Check if the user already has book details
 
     const user = await db.user.findUnique({
@@ -37,7 +39,7 @@ export async function POST(req) {
       const createAwardsReceived = await db.awardsReceived.create({
         data: {
           awards: {
-            create: awards,
+            create: Nawards,
           },
           user: {
             connect: {
@@ -50,7 +52,7 @@ export async function POST(req) {
       const createAwardsReceived = await db.awardsReceived.create({
         data: {
           awards: {
-            create: awards,
+            create: Nawards,
           },
           user: {
             connect: {

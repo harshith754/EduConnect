@@ -6,6 +6,7 @@ export async function POST(req) {
     const { email, patents } = await req.json();
 
     console.log({ email, patents });
+    const Npatents = patents.map(({ patentsRegisteredId, ...rest }) => rest);
 
     // Check if the user already has book details
 
@@ -37,7 +38,7 @@ export async function POST(req) {
       const createdBooksPublished = await db.patentsRegistered.create({
         data: {
           patents: {
-            create: patents,
+            create: Npatents,
           },
           user: {
             connect: {
@@ -50,7 +51,7 @@ export async function POST(req) {
       const createdBooksPublished = await db.patentsRegistered.create({
         data: {
           patents: {
-            create: patents,
+            create: Npatents,
           },
           user: {
             connect: {
