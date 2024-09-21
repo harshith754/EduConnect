@@ -52,11 +52,6 @@ export const BookPublished = () => {
   };
 
   const [formEditable, setFormEditable] = useState(true);
-
-  useEffect(() => {
-    getBookDetails();
-  }, []);
-
   const getBookDetails = async () => {
     const { data } = await axios.get(
       `/api/books-published/${session.user.email}`,
@@ -70,6 +65,9 @@ export const BookPublished = () => {
     setFormEditable(false);
     toast("Info loaded");
   };
+  useEffect(() => {
+    getBookDetails();
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();

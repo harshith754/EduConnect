@@ -50,12 +50,6 @@ export const AppreciationAwards = () => {
   };
 
   const [formEditable, setFormEditable] = useState(true);
-
-  useEffect(() => {
-    // Load award details when the component mounts
-    getAwardDetails();
-  }, []);
-
   const getAwardDetails = async () => {
     const { data } = await axios.get(
       `/api/awards-received/${session.user.email}`,
@@ -69,6 +63,11 @@ export const AppreciationAwards = () => {
     setFormEditable(false);
     toast("Award info loaded");
   };
+
+  useEffect(() => {
+    // Load award details when the component mounts
+    getAwardDetails();
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();

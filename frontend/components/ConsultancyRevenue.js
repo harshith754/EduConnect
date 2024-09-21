@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { CldUploadButton } from "next-cloudinary";
+import { CldImage, CldUploadButton } from "next-cloudinary";
 import { toast } from "sonner";
 
 export const ConsultancyRevenue = () => {

@@ -61,12 +61,6 @@ const FinancialSupport = () => {
     updatedFinancialSupport[index].certificate = file;
     setFinancialSupport(updatedFinancialSupport);
   };
-
-  useEffect(() => {
-    getSupportDetails();
-  }, []);
-
-  // Fetch existing financial support data from API
   const getSupportDetails = async () => {
     const { data } = await axios.get(
       `/api/financial-support/${session.user.email}`,
@@ -82,6 +76,11 @@ const FinancialSupport = () => {
     setFormEditable(false);
     toast("Info loaded");
   };
+  useEffect(() => {
+    getSupportDetails();
+  }, []);
+
+  // Fetch existing financial support data from API
 
   // Handle form submission
   const handleSubmit = (e) => {
