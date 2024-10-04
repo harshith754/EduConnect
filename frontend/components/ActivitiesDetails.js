@@ -59,17 +59,19 @@ export const ActivitiesDetails = () => {
     setActivities(updatedActivities);
   };
 
-  // useEffect(() => {
-  //   getActivityDetails();
-  // }, []);
+  useEffect(() => {
+    getActivityDetails();
+  }, []);
 
   // Fetch existing activities data from API
   const getActivityDetails = async () => {
-    const { data } = await axios.get(`/api/activities/${session.user.email}`);
+    const { data } = await axios.get(
+      `/api/activity-details/${session.user.email}`,
+    );
     console.log(data);
-    if (data.activities === null) return;
+    if (data.activityDetails === null) return;
 
-    const reqData = data.activities.details;
+    const reqData = data.activityDetails.activities;
     const formattedDetails = reqData.map(({ id, ...rest }) => rest);
     if (formattedDetails.length === 0) return;
 
@@ -86,7 +88,7 @@ export const ActivitiesDetails = () => {
       activities,
     });
 
-    axios.post("/api/activities", {
+    axios.post("/api/activity-details", {
       email: session.user.email,
       activities,
     });

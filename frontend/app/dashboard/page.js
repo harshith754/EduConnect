@@ -9,7 +9,6 @@ import PersonalInformation from "@/components/PersonalInformation";
 import ProfessionalDetails from "@/components/ProfessionalDetails";
 import ResearchAndPublications from "@/components/ResearchPaper";
 import FinancialSupport from "@/components/FinancialSupport";
-import InstitutionalResearchFunding from "@/components/InstitutionalResearchFunding";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Dashboard from "@/components/Dashboard";
@@ -66,8 +65,7 @@ export default function UserInfo() {
         return <LectureDetails />;
       case "activities-details":
         return <ActivitiesDetails />;
-      case "institutional-research-funding":
-        return <InstitutionalResearchFunding />;
+
       case "get-information":
         return <FacultyInformation />;
       case "faculty-display":

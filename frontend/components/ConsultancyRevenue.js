@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { CldImage, CldUploadButton } from "next-cloudinary";
 import { toast } from "sonner";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 
 export const ConsultancyRevenue = () => {
   const [formEditable, setFormEditable] = useState(true);
+  const { data: session } = useSession();
 
   // Initial state for consultancy and training revenue
   const [consultancyData, setConsultancyData] = useState([
@@ -19,10 +22,9 @@ export const ConsultancyRevenue = () => {
     },
   ]);
 
-  // useEffect(() => {
-
-  //   getConsultancyData();
-  // }, []);
+  useEffect(() => {
+    getConsultancyData();
+  }, []);
 
   const getConsultancyData = async () => {
     try {
@@ -30,19 +32,16 @@ export const ConsultancyRevenue = () => {
         `/api/consultancy-revenue/${session.user.email}`,
       );
       console.log(data);
-      if (data.consultancyRevenue === null) return;
+      if (data.trainingRevenues === null) return;
 
-      const reqData = data.fellowshipSupport.fellowships;
-      const formattedSupports = reqData.map(({ id, ...rest }) => rest);
-      if (formattedSupports.length === 0) return;
+      const reqData = data.trainingRevenues.revenues;
+      const formattedRevenues = reqData.map(({ id, ...rest }) => rest);
+      if (formattedRevenues.length === 0) return;
 
-      setFellowshipSupport(formattedSupports);
+      setConsultancyData(formattedRevenues);
+
       setFormEditable(false);
       toast("Info loaded");
-
-      if (data.consultancyTrainingRevenue) {
-        setConsultancyData(data.consultancyTrainingRevenue);
-      }
     } catch (error) {
       console.error("Error fetching consultancy training data:", error);
       toast.error("Failed to load data");
@@ -91,7 +90,7 @@ export const ConsultancyRevenue = () => {
     axios
       .post("/api/consultancy-revenue", {
         email: session.user.email,
-        consultancyTrainingRevenue: consultancyData,
+        trainingRevenue: consultancyData,
       })
       .then(() => {
         toast("Form submitted successfully");

@@ -30,6 +30,9 @@ model User {
   papersPublished     PapersPublished?
   financialSupport    FinancialSupport? //for workshops
   fellowshipSupport   FellowshipSupport?
+  committeeDetails    CommitteeDetails?
+  activityDetails     ActivityDetails?
+  trainingRevenues    TrainingRevenues?
 }
 
 model FellowshipSupport {
@@ -213,4 +216,61 @@ model Paper {
   numberOfCitations String?
   PapersPublished   PapersPublished? @relation(fields: [papersPublishedId], references: [id])
   papersPublishedId Int?
+}
+
+model CommitteeDetails {
+  id         Int         @id @default(autoincrement())
+  user       User        @relation(fields: [email], references: [email])
+  email      String      @unique
+  committees Committee[]
+}
+
+model Committee {
+  id                Int     @id @default(autoincrement())
+  committeeName     String?
+  durationOfService String?
+  proof             String?
+  responsibilities  String?
+  roleOrPosition    String?
+
+  CommitteeDetails   CommitteeDetails? @relation(fields: [committeeDetailsId], references: [id])
+  committeeDetailsId Int?
+}
+
+model ActivityDetails {
+  id         Int        @id @default(autoincrement())
+  user       User       @relation(fields: [email], references: [email])
+  email      String     @unique
+  activities Activity[]
+}
+
+model Activity {
+  id             Int     @id @default(autoincrement())
+  achievements   String?
+  activityName   String?
+  certificate    String?
+  duration       String?
+  impact         String?
+  roleOrPosition String?
+
+  ActivityDetails   ActivityDetails? @relation(fields: [activityDetailsId], references: [id])
+  activityDetailsId Int?
+}
+
+model TrainingRevenues {
+  id       Int       @id @default(autoincrement())
+  user     User      @relation(fields: [email], references: [email])
+  email    String    @unique
+  revenues Revenue[]
+}
+
+model Revenue {
+  id                 Int               @id @default(autoincrement())
+  amount             String?
+  certificateProof   String?
+  dates              String?
+  name               String?
+  organization       String?
+  TrainingRevenues   TrainingRevenues? @relation(fields: [trainingRevenuesId], references: [id])
+  trainingRevenuesId Int?
 }

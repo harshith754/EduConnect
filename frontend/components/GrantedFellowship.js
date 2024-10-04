@@ -99,9 +99,7 @@ export const GrantedFellowship = () => {
 
   return (
     <div className="flex flex-col px-6 py-3">
-      <h2 className="text-lg font-bold mb-4">
-        Fellowship/Financial Supportdddddddddddd
-      </h2>
+      <h2 className="text-lg font-bold mb-4">Fellowship/Financial Support</h2>
       <form className="flex flex-col gap-4">
         {fellowshipSupport.map((support, index) => (
           <div key={index} className="flex flex-col gap-4 w-[80%] ml-8">

@@ -57,9 +57,9 @@ export const CommitteeDetails = () => {
     setCommitteeDetails(updatedCommitteeDetails);
   };
 
-  // useEffect(() => {
-  //   getCommitteeDetails();
-  // }, []);
+  useEffect(() => {
+    getCommitteeDetails();
+  }, []);
 
   // Fetch existing committee details from API
   const getCommitteeDetails = async () => {
@@ -69,7 +69,7 @@ export const CommitteeDetails = () => {
     console.log(data);
     if (data.committeeDetails === null) return;
 
-    const reqData = data.committeeDetails.details;
+    const reqData = data.committeeDetails.committees;
     const formattedDetails = reqData.map(({ id, ...rest }) => rest);
     if (formattedDetails.length === 0) return;
 
@@ -131,7 +131,7 @@ export const CommitteeDetails = () => {
               }
             />
 
-            <Label>Duration of Service:</Label>
+            <Label>Duration of Service (in years):</Label>
             <Input
               type="text"
               placeholder="Duration of Service"
