@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/chart";
 import { DepartmentDistribution } from "@/charts/DepartmentDistribution";
 import { QualificationDistribution } from "@/charts/QualificationDistribution";
+import PublicationsAndResearch from "@/charts/PublicationsAndResearch";
 
 const facultyData = [
   {
@@ -242,10 +243,18 @@ export const FacultyAnalytics = () => {
   const [data, setData] = useState(facultyData);
 
   return (
-    <div className="flex flex-col px-6 py-3 font-normal">
+    <div className="flex flex-col px-6 py-3 gap-5">
       <div className="w-full flex flex-row gap-2 ">
-        <DepartmentDistribution />
-        <QualificationDistribution />
+        <div className="w-1/2">
+          <DepartmentDistribution />
+        </div>
+        <div className="w-1/2">
+          <QualificationDistribution />
+        </div>
+      </div>
+
+      <div>
+        <PublicationsAndResearch />
       </div>
     </div>
   );

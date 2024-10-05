@@ -57,12 +57,12 @@ const chartConfig = {
 };
 export function QualificationDistribution() {
   return (
-    <Card>
+    <Card className="w-[95%]">
       <CardHeader>
         <CardTitle>Qualification Distribution</CardTitle>
         <CardDescription>PhD, MTech, MCA, and MSc programs</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="w-full">
         <ChartContainer config={chartConfig} className="h-80">
           <BarChart
             data={chartData}

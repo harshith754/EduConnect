@@ -37,7 +37,7 @@ const c1 = [
 
 export const DepartmentDistribution = () => {
   return (
-    <Card>
+    <Card className="w-[95%]">
       <CardHeader>
         <CardTitle>Faculty Distribution</CardTitle>
         <CardDescription>
@@ -51,10 +51,10 @@ export const DepartmentDistribution = () => {
             <XAxis
               dataKey="department"
               tickLine={false}
-              tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
+              padding={{ left: 5, right: 5 }} // Adjust the padding
             />
+
             <ChartTooltip content={<ChartTooltipContent />} />
             <ChartLegend content={<ChartLegendContent />} />
             <Bar dataKey="maleCount" fill="var(--color-maleCount)" radius={4} />
