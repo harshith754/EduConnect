@@ -163,6 +163,12 @@ const SideBar = () => {
               >
                 Get Faculty Information
               </div>
+              <div
+                className={`p-2 ${selectedTab === "faculty-analytics" ? "font-bold" : ""}`}
+                onClick={() => handleAccordionClick("faculty-analytics")}
+              >
+                Get Faculty Analytics
+              </div>
             </AccordionContent>
           </AccordionItem>
         </Accordion>

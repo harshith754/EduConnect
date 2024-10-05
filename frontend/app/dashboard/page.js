@@ -7,7 +7,6 @@ import { signOut } from "next-auth/react";
 import { useSession } from "next-auth/react";
 import PersonalInformation from "@/components/PersonalInformation";
 import ProfessionalDetails from "@/components/ProfessionalDetails";
-import ResearchAndPublications from "@/components/ResearchPaper";
 import FinancialSupport from "@/components/FinancialSupport";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
@@ -24,6 +23,7 @@ import { BookPublished } from "@/components/BookPublished";
 import { FacultyInformation } from "@/components/FacultyInformation";
 import { FacultyDisplay } from "@/components/FacultyDisplay";
 import ResearchPaper from "@/components/ResearchPaper";
+import { FacultyAnalytics } from "@/components/FacultyAnalytics";
 
 export default function UserInfo() {
   const { data: session } = useSession();
@@ -65,13 +65,14 @@ export default function UserInfo() {
         return <LectureDetails />;
       case "activities-details":
         return <ActivitiesDetails />;
-
       case "get-information":
         return <FacultyInformation />;
       case "faculty-display":
         return <FacultyDisplay />;
       case "research-paper":
         return <ResearchPaper />;
+      case "faculty-analytics":
+        return <FacultyAnalytics />;
       default:
         return <Dashboard />;
     }
