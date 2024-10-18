@@ -5,6 +5,13 @@ import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import axios from "axios";
 import { toast } from "sonner";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 
 const ResearchAndPublications = () => {
   const { data: session } = useSession();
@@ -87,103 +94,110 @@ const ResearchAndPublications = () => {
     <div className="flex flex-col px-6 py-3">
       <h2 className="text-lg font-bold mb-4">Research Papers Form</h2>
 
-      <form className="flex flex-col divide-y ">
+      <form className="flex flex-col gap-4">
         {researchPapers.map((paper, index) => (
-          <div key={index} className="flex flex-col gap-4 w-[80%] ml-8">
-            <h1>Research Paper {index + 1}</h1>
-            <Label>Title of the Paper:</Label>
-            <Input
-              type="text"
-              placeholder="Title of the Paper"
-              value={paper.title}
-              onChange={(e) =>
-                handleResearchPaperChange(index, "title", e.target.value)
-              }
-              disabled={!formEditable}
-              className={
-                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
-              }
-            />
+          <div key={index}>
+            <Card className="flex flex-col w-[80%] ml-8">
+              <CardHeader>
+                <CardTitle>Research Paper {index + 1}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Label>Title of the Paper:</Label>
+                <Input
+                  type="text"
+                  placeholder="Title of the Paper"
+                  value={paper.title}
+                  onChange={(e) =>
+                    handleResearchPaperChange(index, "title", e.target.value)
+                  }
+                  disabled={!formEditable}
+                  className={
+                    "mb-2 disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+                  }
+                />
 
-            <Label>Name of the Author/s:</Label>
-            <Input
-              type="text"
-              placeholder="Name of the Author/s"
-              value={paper.authors}
-              onChange={(e) =>
-                handleResearchPaperChange(index, "authors", e.target.value)
-              }
-              disabled={!formEditable}
-              className={
-                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
-              }
-            />
+                <Label>Name of the Author/s:</Label>
+                <Input
+                  type="text"
+                  placeholder="Name of the Author/s"
+                  value={paper.authors}
+                  onChange={(e) =>
+                    handleResearchPaperChange(index, "authors", e.target.value)
+                  }
+                  disabled={!formEditable}
+                  className={
+                    "mb-2 disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+                  }
+                />
 
-            <Label>Year of Publication:</Label>
-            <Input
-              type="text"
-              placeholder="Year of Publication"
-              value={paper.yearOfPublication}
-              onChange={(e) =>
-                handleResearchPaperChange(
-                  index,
-                  "yearOfPublication",
-                  e.target.value,
-                )
-              }
-              disabled={!formEditable}
-              className={
-                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
-              }
-            />
+                <Label>Year of Publication:</Label>
+                <Input
+                  type="text"
+                  placeholder="Year of Publication"
+                  value={paper.yearOfPublication}
+                  onChange={(e) =>
+                    handleResearchPaperChange(
+                      index,
+                      "yearOfPublication",
+                      e.target.value,
+                    )
+                  }
+                  disabled={!formEditable}
+                  className={
+                    "mb-2 disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+                  }
+                />
 
-            <Label>Date of Publication:</Label>
-            <Input
-              type="text"
-              placeholder="DD/MM/YYYY"
-              value={paper.dateOfPublication}
-              onChange={(e) =>
-                handleResearchPaperChange(
-                  index,
-                  "dateOfPublication",
-                  e.target.value,
-                )
-              }
-              disabled={!formEditable}
-              className={
-                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
-              }
-            />
+                <Label>Date of Publication:</Label>
+                <Input
+                  type="text"
+                  placeholder="DD/MM/YYYY"
+                  value={paper.dateOfPublication}
+                  onChange={(e) =>
+                    handleResearchPaperChange(
+                      index,
+                      "dateOfPublication",
+                      e.target.value,
+                    )
+                  }
+                  disabled={!formEditable}
+                  className={
+                    "mb-2 disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+                  }
+                />
 
-            <Label>Link to Article/Paper/Abstract of the Article:</Label>
-            <Input
-              type="text"
-              placeholder="Link to Article/Paper/Abstract of the Article"
-              value={paper.linkToArticle}
-              onChange={(e) =>
-                handleResearchPaperChange(
-                  index,
-                  "linkToArticle",
-                  e.target.value,
-                )
-              }
-              disabled={!formEditable}
-              className={
-                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
-              }
-            />
+                <Label>Link to Article/Paper/Abstract of the Article:</Label>
+                <Input
+                  type="text"
+                  placeholder="Link to Article/Paper/Abstract of the Article"
+                  value={paper.linkToArticle}
+                  onChange={(e) =>
+                    handleResearchPaperChange(
+                      index,
+                      "linkToArticle",
+                      e.target.value,
+                    )
+                  }
+                  disabled={!formEditable}
+                  className={
+                    "mb-2 disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+                  }
+                />
 
-            <div>Number of citations (updated automatically)</div>
-
-            {formEditable && (
-              <Button
-                type="button"
-                onClick={() => handleDeleteResearchPaper(index)}
-                className="text-white w-[200px] mx-auto bg-red-500 mb-3"
-              >
-                Delete Lecture
-              </Button>
-            )}
+                <div>Number of citations (updated automatically)</div>
+              </CardContent>
+              <CardFooter>
+                {formEditable && (
+                  <Button
+                    type="button"
+                    onClick={() => handleDeleteResearchPaper(index)}
+                    className="text-white w-[200px] mx-auto bg-red-500 mb-3"
+                  >
+                    Delete Lecture
+                  </Button>
+                )}{" "}
+              </CardFooter>
+            </Card>
           </div>
         ))}
 

@@ -6,6 +6,13 @@ import { toast } from "sonner"; // Assuming this is for notifications
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { CldImage, CldUploadButton } from "next-cloudinary";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 
 export const AppreciationAwards = () => {
   const { data: session } = useSession();
@@ -89,139 +96,150 @@ export const AppreciationAwards = () => {
       <h2 className="text-lg font-bold mb-4">Awards Received Form</h2>
       <form className="flex flex-col gap-4">
         {awards.map((award, index) => (
-          <div key={index} className="flex flex-col gap-4 w-[80%] ml-8">
-            <h1>Award {index + 1}</h1>
-            <Label>Name of the Award:</Label>
-            <Input
-              type="text"
-              placeholder="Award Name"
-              value={award.awardName}
-              onChange={(e) =>
-                handleAwardChange(index, "awardName", e.target.value)
-              }
-              disabled={!formEditable}
-              className={
-                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
-              }
-            />
-
-            <Label>Name of the Agency:</Label>
-            <Input
-              type="text"
-              placeholder="Agency Name"
-              value={award.agencyName}
-              onChange={(e) =>
-                handleAwardChange(index, "agencyName", e.target.value)
-              }
-              disabled={!formEditable}
-              className={
-                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
-              }
-            />
-
-            <Label>Email Address of the Agency:</Label>
-            <Input
-              type="email"
-              placeholder="Agency Email"
-              value={award.agencyEmail}
-              onChange={(e) =>
-                handleAwardChange(index, "agencyEmail", e.target.value)
-              }
-              disabled={!formEditable}
-              className={
-                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
-              }
-            />
-
-            <Label>Address of the Agency:</Label>
-            <Input
-              type="text"
-              placeholder="Agency Address"
-              value={award.agencyAddress}
-              onChange={(e) =>
-                handleAwardChange(index, "agencyAddress", e.target.value)
-              }
-              disabled={!formEditable}
-              className={
-                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
-              }
-            />
-
-            <Label>Year of Receiving Award:</Label>
-            <Input
-              type="text"
-              placeholder="Year Received"
-              value={award.yearReceived}
-              onChange={(e) =>
-                handleAwardChange(index, "yearReceived", e.target.value)
-              }
-              disabled={!formEditable}
-              className={
-                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
-              }
-            />
-
-            <Label>Fellowship Received:</Label>
-            <Input
-              type="text"
-              placeholder="Yes/No"
-              value={award.hasFellowship}
-              onChange={(e) =>
-                handleAwardChange(index, "hasFellowship", e.target.value)
-              }
-              disabled={!formEditable}
-              className={
-                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
-              }
-            />
-            <Label>File Upload:</Label>
-            {award.fileId && award.fileId !== "" ? (
-              <>
-                <CldImage
-                  width={250}
-                  height={280}
-                  crop="fill"
-                  src={award.fileId}
-                  alt="image"
-                  className="rounded-lg flex flex-col box-border items-center justify-end"
+          <div key={index}>
+            <Card className="flex flex-col w-[80%] ml-8">
+              <CardHeader>
+                <CardTitle>Award {index + 1}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Label>Name of the Award:</Label>
+                <Input
+                  type="text"
+                  placeholder="Award Name"
+                  value={award.awardName}
+                  onChange={(e) =>
+                    handleAwardChange(index, "awardName", e.target.value)
+                  }
+                  disabled={!formEditable}
+                  className={
+                    "mb-2 disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+                  }
                 />
 
+                <Label>Name of the Agency:</Label>
+                <Input
+                  type="text"
+                  placeholder="Agency Name"
+                  value={award.agencyName}
+                  onChange={(e) =>
+                    handleAwardChange(index, "agencyName", e.target.value)
+                  }
+                  disabled={!formEditable}
+                  className={
+                    "mb-2 disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+                  }
+                />
+
+                <Label>Email Address of the Agency:</Label>
+                <Input
+                  type="email"
+                  placeholder="Agency Email"
+                  value={award.agencyEmail}
+                  onChange={(e) =>
+                    handleAwardChange(index, "agencyEmail", e.target.value)
+                  }
+                  disabled={!formEditable}
+                  className={
+                    "mb-2 disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+                  }
+                />
+
+                <Label>Address of the Agency:</Label>
+                <Input
+                  type="text"
+                  placeholder="Agency Address"
+                  value={award.agencyAddress}
+                  onChange={(e) =>
+                    handleAwardChange(index, "agencyAddress", e.target.value)
+                  }
+                  disabled={!formEditable}
+                  className={
+                    "mb-2 disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+                  }
+                />
+
+                <Label>Year of Receiving Award:</Label>
+                <Input
+                  type="text"
+                  placeholder="Year Received"
+                  value={award.yearReceived}
+                  onChange={(e) =>
+                    handleAwardChange(index, "yearReceived", e.target.value)
+                  }
+                  disabled={!formEditable}
+                  className={
+                    "mb-2 disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+                  }
+                />
+
+                <Label>Fellowship Received:</Label>
+                <Input
+                  type="text"
+                  placeholder="Yes/No"
+                  value={award.hasFellowship}
+                  onChange={(e) =>
+                    handleAwardChange(index, "hasFellowship", e.target.value)
+                  }
+                  disabled={!formEditable}
+                  className={
+                    "mb-2 disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+                  }
+                />
+                <Label>File Upload:</Label>
+                {award.fileId && award.fileId !== "" ? (
+                  <>
+                    <CldImage
+                      width={250}
+                      height={280}
+                      crop="fill"
+                      src={award.fileId}
+                      alt="image"
+                      className="rounded-lg flex flex-col box-border items-center justify-end"
+                    />
+
+                    {formEditable && (
+                      <Button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleAwardChange(index, "fileId", "");
+                        }}
+                        className=" w-[300px] text-white py-2 px-4 rounded"
+                      >
+                        Edit File
+                      </Button>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <CldUploadButton
+                      onUpload={(result) => {
+                        handleAwardChange(
+                          index,
+                          "fileId",
+                          result.info.public_id,
+                        );
+                      }}
+                      uploadPreset="artPage"
+                      className="w-[80%] sm:w-[65%] text-gray-500 bg-white py-2 px-4 rounded-lg text-left mb-2"
+                      disabled={!formEditable}
+                    >
+                      Upload an Image
+                    </CldUploadButton>
+                  </>
+                )}
+              </CardContent>
+              <CardFooter>
                 {formEditable && (
                   <Button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleAwardChange(index, "fileId", "");
-                    }}
-                    className=" w-[300px] text-white py-2 px-4 rounded"
+                    type="button"
+                    onClick={() => handleDeleteAward(index)}
+                    className="text-white w-[200px] mx-auto bg-red-500"
                   >
-                    Edit File
+                    Delete
                   </Button>
-                )}
-              </>
-            ) : (
-              <>
-                <CldUploadButton
-                  onUpload={(result) => {
-                    handleAwardChange(index, "fileId", result.info.public_id);
-                  }}
-                  uploadPreset="artPage"
-                  className="w-[80%] sm:w-[65%] text-gray-500 bg-white py-2 px-4 rounded-lg text-left mb-2"
-                  disabled={!formEditable}
-                >
-                  Upload an Image
-                </CldUploadButton>
-              </>
-            )}
-
-            {formEditable && (
-              <Button
-                type="button"
-                onClick={() => handleDeleteAward(index)}
-                className="text-white w-[200px] mx-auto bg-red-500"
-              >
-                Delete
-              </Button>
-            )}
+                )}{" "}
+              </CardFooter>
+            </Card>
           </div>
         ))}
 

@@ -9,14 +9,21 @@ import {
   AccordionTrigger,
 } from "./ui/accordion";
 
-import { LayoutDashboard, LineChart, Settings } from "lucide-react";
+import {
+  GraduationCap,
+  LayoutDashboard,
+  LineChart,
+  Settings,
+} from "lucide-react";
 import { Badge } from "./ui/badge";
 import { useSideBarContext } from "@/context/context";
 import { Button } from "./ui/button";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const SideBar = () => {
   const { data: session } = useSession();
-
+  const router = useRouter();
   const { selectedTab, handleAccordionClick } = useSideBarContext();
 
   return (
@@ -24,13 +31,23 @@ const SideBar = () => {
       <div className="w-auto h-fit mt-4 pb-3 mx-4  mb-4 border-b-2 border-primary-foreground">
         <Badge
           variant="outline"
-          className="flex flex-col p-3 gap-2 text-sm rounded-2xl"
+          className="flex flex-row p-3 gap-2 text-sm rounded-2xl justify justify-start w-fill"
+          onClick={() => {
+            handleAccordionClick("user-profile");
+            router.push("/user-profile");
+          }}
         >
-          <div className="">
-            <span className>{session?.user?.name}</span>
+          <div>
+            <GraduationCap className="mr-3" />
           </div>
-          <div className="">
-            <span className>{session?.user?.email}</span>
+
+          <div className="flex-col items-start justify-start">
+            <div>
+              <span className>{session?.user?.name}</span>
+            </div>
+            <div className="text-[12px] font-normal">
+              <span className>{session?.user?.email}</span>
+            </div>
           </div>
         </Badge>
       </div>
@@ -42,7 +59,10 @@ const SideBar = () => {
             <AccordionTrigger>
               <div
                 className="flex flex-row justify-center items-center"
-                onClick={() => handleAccordionClick("dashboard")}
+                onClick={() => {
+                  handleAccordionClick("dashboard");
+                  router.push("/dashboard");
+                }}
               >
                 <LayoutDashboard
                   className="inline-block mr-2"

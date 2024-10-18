@@ -6,6 +6,13 @@ import { toast } from "sonner";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { CldImage, CldUploadButton } from "next-cloudinary";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 
 export const LectureDetails = () => {
   const { data: session } = useSession();
@@ -90,124 +97,132 @@ export const LectureDetails = () => {
       <h2 className="text-lg font-bold mb-4">Lecture Details Form</h2>
       <form className="flex flex-col gap-4">
         {lectures.map((lecture, index) => (
-          <div key={index} className="flex flex-col gap-4 w-[80%] ml-8">
-            <h1>Lecture {index + 1}</h1>
-            <Label>Title/Topic of the Lecture:</Label>
-            <Input
-              type="text"
-              placeholder="Title"
-              value={lecture.title}
-              onChange={(e) =>
-                handleLectureChange(index, "title", e.target.value)
-              }
-              disabled={!formEditable}
-              className={
-                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
-              }
-            />
-            <Label>Date Delivered:</Label>
-            <Input
-              type="text"
-              placeholder="Date Delivered"
-              value={lecture.dateDelivered}
-              onChange={(e) =>
-                handleLectureChange(index, "dateDelivered", e.target.value)
-              }
-              disabled={!formEditable}
-              className={
-                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
-              }
-            />
-            <Label>Venue/Organization:</Label>
-            <Input
-              type="text"
-              placeholder="Venue/Organization"
-              value={lecture.venue}
-              onChange={(e) =>
-                handleLectureChange(index, "venue", e.target.value)
-              }
-              disabled={!formEditable}
-              className={
-                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
-              }
-            />
-            <Label>Audience (if applicable):</Label>
-            <Input
-              type="text"
-              placeholder="Audience"
-              value={lecture.audience}
-              onChange={(e) =>
-                handleLectureChange(index, "audience", e.target.value)
-              }
-              disabled={!formEditable}
-              className={
-                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
-              }
-            />
-            <Label>Brief Description or Highlights:</Label>
-            <Input
-              type="text"
-              placeholder="Description"
-              value={lecture.description}
-              onChange={(e) =>
-                handleLectureChange(index, "description", e.target.value)
-              }
-              disabled={!formEditable}
-              className={
-                "disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
-              }
-            />
-            <Label>File Upload:</Label>
-            {lecture.fileProof && lecture.fileProof !== "" ? (
-              <>
-                <CldImage
-                  width={250}
-                  height={280}
-                  crop="fill"
-                  src={lecture.fileProof}
-                  alt="image"
-                  className="rounded-lg flex flex-col box-border items-center justify-end"
+          <div key={index}>
+            <Card className="flex flex-col w-[80%] ml-8">
+              <CardHeader>
+                <CardTitle>Lecture {index + 1}</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Label>Title/Topic of the Lecture:</Label>
+                <Input
+                  type="text"
+                  placeholder="Title"
+                  value={lecture.title}
+                  onChange={(e) =>
+                    handleLectureChange(index, "title", e.target.value)
+                  }
+                  disabled={!formEditable}
+                  className={
+                    "mb-2 disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+                  }
                 />
+                <Label>Date Delivered:</Label>
+                <Input
+                  type="text"
+                  placeholder="Date Delivered"
+                  value={lecture.dateDelivered}
+                  onChange={(e) =>
+                    handleLectureChange(index, "dateDelivered", e.target.value)
+                  }
+                  disabled={!formEditable}
+                  className={
+                    "mb-2 disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+                  }
+                />
+                <Label>Venue/Organization:</Label>
+                <Input
+                  type="text"
+                  placeholder="Venue/Organization"
+                  value={lecture.venue}
+                  onChange={(e) =>
+                    handleLectureChange(index, "venue", e.target.value)
+                  }
+                  disabled={!formEditable}
+                  className={
+                    "mb-2 disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+                  }
+                />
+                <Label>Audience (if applicable):</Label>
+                <Input
+                  type="text"
+                  placeholder="Audience"
+                  value={lecture.audience}
+                  onChange={(e) =>
+                    handleLectureChange(index, "audience", e.target.value)
+                  }
+                  disabled={!formEditable}
+                  className={
+                    "mb-2 disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+                  }
+                />
+                <Label>Brief Description or Highlights:</Label>
+                <Input
+                  type="text"
+                  placeholder="Description"
+                  value={lecture.description}
+                  onChange={(e) =>
+                    handleLectureChange(index, "description", e.target.value)
+                  }
+                  disabled={!formEditable}
+                  className={
+                    "mb-2 disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+                  }
+                />
+                <Label>File Upload:</Label>
+                {lecture.fileProof && lecture.fileProof !== "" ? (
+                  <>
+                    <CldImage
+                      width={250}
+                      height={280}
+                      crop="fill"
+                      src={lecture.fileProof}
+                      alt="image"
+                      className="rounded-lg flex flex-col box-border items-center justify-end"
+                    />
 
+                    {formEditable && (
+                      <Button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleLectureChange(index, "fileProof", "");
+                        }}
+                        className=" w-[300px] text-white py-2 px-4 rounded"
+                      >
+                        Edit File
+                      </Button>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <CldUploadButton
+                      onUpload={(result) => {
+                        handleLectureChange(
+                          index,
+                          "fileProof",
+                          result.info.public_id,
+                        );
+                      }}
+                      uploadPreset="artPage"
+                      className="w-[80%] sm:w-[65%] text-gray-500 bg-white py-2 px-4 rounded-lg text-left mb-2"
+                      disabled={!formEditable}
+                    >
+                      Upload an Image
+                    </CldUploadButton>
+                  </>
+                )}{" "}
+              </CardContent>
+              <CardFooter>
                 {formEditable && (
                   <Button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleLectureChange(index, "fileProof", "");
-                    }}
-                    className=" w-[300px] text-white py-2 px-4 rounded"
+                    type="button"
+                    onClick={() => handleDeleteLecture(index)}
+                    className="text-white w-[200px] mx-auto bg-red-500"
                   >
-                    Edit File
+                    Delete Lecture
                   </Button>
-                )}
-              </>
-            ) : (
-              <>
-                <CldUploadButton
-                  onUpload={(result) => {
-                    handleLectureChange(
-                      index,
-                      "fileProof",
-                      result.info.public_id,
-                    );
-                  }}
-                  uploadPreset="artPage"
-                  className="w-[80%] sm:w-[65%] text-gray-500 bg-white py-2 px-4 rounded-lg text-left mb-2"
-                  disabled={!formEditable}
-                >
-                  Upload an Image
-                </CldUploadButton>
-              </>
-            )}
-            {formEditable && (
-              <Button
-                type="button"
-                onClick={() => handleDeleteLecture(index)}
-                className="text-white w-[200px] mx-auto bg-red-500"
-              >
-                Delete Lecture
-              </Button>
-            )}
+                )}{" "}
+              </CardFooter>
+            </Card>
           </div>
         ))}
         {formEditable && (

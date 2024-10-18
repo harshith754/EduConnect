@@ -24,6 +24,7 @@ import { FacultyInformation } from "@/components/FacultyInformation";
 import { FacultyDisplay } from "@/components/FacultyDisplay";
 import ResearchPaper from "@/components/ResearchPaper";
 import { FacultyAnalytics } from "@/components/FacultyAnalytics";
+import { UserProfile } from "@/components/UserProfile";
 
 export default function Page() {
   const { data: session } = useSession();
@@ -38,6 +39,7 @@ export default function Page() {
       router.push("/");
     }
   }, [session, router]);
+
   // Function to render the component based on the selectedTab
   const renderTabContent = () => {
     switch (selectedTab) {
@@ -74,7 +76,7 @@ export default function Page() {
       case "faculty-analytics":
         return <FacultyAnalytics />;
       default:
-        return <Dashboard />;
+        return <UserProfile />;
     }
   };
 

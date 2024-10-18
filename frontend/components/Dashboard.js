@@ -5,17 +5,17 @@ import { Check, CircleCheckBig, CircleOff, X } from "lucide-react";
 const Dashboard = () => {
   const [categories, setCategories] = useState({
     personalInformation: true,
-    professionalDetails: false,
-    researchAndPublications: false,
-    patentsRegistered: false,
-    financialSupport: false,
-    teachersUndergoingFDPsMDPs: false,
+    professionalDetails: true,
+    booksPublished: true,
+    patentsRegistered: true,
+    appreciationAndAwards: true,
+    guestLecturesDelivered: true,
+    researchPaperInformation: false,
+    financialSupportForWorkshops: false,
     grantedFellowships: false,
-    consultancyAndTrainingRevenue: false,
-    appreciationAndAwards: false,
     institutionalAndDepartmentCommittee: false,
-    guestLecturesDelivered: false,
     coCurricularExtracurricularActivities: false,
+    consultancyAndTrainingRevenue: false,
   });
 
   // Calculate the total number of categories
