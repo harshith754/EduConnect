@@ -5,7 +5,7 @@ export async function GET(req, { params }) {
   try {
     const email = params.email;
 
-    const facultyDetails = await prisma.user.findUnique({
+    const facultyDetails = await db.user.findUnique({
       where: {
         email: email, // Replace this with the actual email
       },
