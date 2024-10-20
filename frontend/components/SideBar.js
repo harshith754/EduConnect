@@ -31,7 +31,7 @@ const SideBar = () => {
       <div className="w-auto h-fit mt-4 pb-3 mx-4  mb-4 border-b-2 border-primary-foreground">
         <Badge
           variant="outline"
-          className="flex flex-row p-3 gap-2 text-sm rounded-2xl justify justify-start w-fill"
+          className="flex flex-row p-3 gap-2 text-sm rounded-2xl justify justify-start w-fill cursor-pointer"
           onClick={() => {
             handleAccordionClick("user-profile");
             router.push("/user-profile");

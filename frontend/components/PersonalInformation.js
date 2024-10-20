@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "./ui/button";
-import { Calendar } from "./ui/calendar";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Calendar as CalendarIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
 
 import { toast } from "sonner";
 import axios, { AxiosError } from "axios";
@@ -34,13 +29,7 @@ const PersonalInformation = () => {
   const [imageId, setImageId] = useState("");
 
   const { data: session } = useSession();
-  console.log(session.user.email);
   // Function to handle form submission
-
-  useEffect(() => {
-    getPersonalDetails();
-  }, []);
-
   const getPersonalDetails = async () => {
     const { data } = await axios.get(
       `/api/personal-details/${session.user.email}`,
@@ -62,6 +51,10 @@ const PersonalInformation = () => {
     }
     toast("Info loaded");
   };
+  useEffect(() => {
+    getPersonalDetails();
+  }, []);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
