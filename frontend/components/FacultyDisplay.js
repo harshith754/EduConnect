@@ -1,9 +1,18 @@
 import axios from "axios";
 import { CldImage } from "next-cloudinary";
 import React, { useEffect, useState } from "react";
+import { Card } from "./ui/card";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { useRouter } from "next/navigation";
+import { User } from "lucide-react";
 
 export const FacultyDisplay = () => {
   const [data, setData] = useState();
+  const router = useRouter();
   useEffect(() => {
     getInformation();
   }, []);
@@ -35,13 +44,10 @@ export const FacultyDisplay = () => {
     <div className="flex flex-col px-6 py-3 font-normal">
       <h2 className="text-lg font-bold mb-4">All faculties</h2>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-3 ">
         {data &&
           data.map((faculty, index) => (
-            <div
-              key={index}
-              className="flex flex-row py-2 shadow-md rounded-md"
-            >
+            <Card key={index} className="flex flex-row py-2 cursor-pointer">
               <div className="pr-5 pl-2">
                 {faculty?.personalDetails?.imageId && (
                   <CldImage
@@ -80,16 +86,27 @@ export const FacultyDisplay = () => {
                   <span className="font-semibold">Mobile Number:</span>{" "}
                   {faculty?.personalDetails?.mobileNumber || ""}
                 </p>
+
                 <p>
-                  <span className="font-semibold">Email:</span>{" "}
-                  {faculty?.professionalDetails?.email || ""}
-                </p>
-                <p>
-                  <span className="font-semibold">Teaching Experience:</span>{" "}
+                  <span className="font-semibold">
+                    Teaching Experience (in years):
+                  </span>{" "}
                   {faculty?.professionalDetails?.teachingExperience || ""}
                 </p>
               </div>
-            </div>
+              <HoverCard className="justify-end">
+                <HoverCardTrigger asChild>
+                  <User
+                    onClick={() =>
+                      router.push(`/user-profile/${faculty?.email}`)
+                    }
+                  />
+                </HoverCardTrigger>
+                <HoverCardContent className="w-auto">
+                  <div className="flex justify-between ">Visit Profile</div>
+                </HoverCardContent>
+              </HoverCard>
+            </Card>
           ))}
       </div>
     </div>

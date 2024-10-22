@@ -34,7 +34,7 @@ const SideBar = () => {
           className="flex flex-row p-3 gap-2 text-sm rounded-2xl justify justify-start w-fill cursor-pointer"
           onClick={() => {
             handleAccordionClick("user-profile");
-            router.push("/user-profile");
+            router.push(`/user-profile/${session?.user.email}`);
           }}
         >
           <div>
@@ -161,7 +161,10 @@ const SideBar = () => {
             <AccordionTrigger>
               <div
                 className="flex flex-row justify-center items-center"
-                onClick={() => handleAccordionClick("analytics")}
+                onClick={() => {
+                  handleAccordionClick("analytics");
+                  router.push("/dashboard");
+                }}
               >
                 <LineChart
                   className="inline-block mr-2"
