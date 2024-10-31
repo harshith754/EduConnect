@@ -12,10 +12,12 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
+import { Spinner } from "./Spinner";
 
 const ResearchAndPublications = () => {
   const { data: session } = useSession();
   const [formEditable, setFormEditable] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [researchPapers, setResearchPapers] = useState([
     {
@@ -60,6 +62,8 @@ const ResearchAndPublications = () => {
   }, []);
 
   const getResearchPapers = async () => {
+    setIsLoading(true);
+
     const { data } = await axios.get(
       `/api/papers-published/${session.user.email}`,
     );
@@ -73,6 +77,7 @@ const ResearchAndPublications = () => {
 
     setFormEditable(false);
     toast("Info loaded");
+    setIsLoading(false);
   };
 
   // Function to handle form submission
@@ -89,7 +94,9 @@ const ResearchAndPublications = () => {
     });
     setFormEditable(false);
   };
-
+  if (isLoading) {
+    return <Spinner />;
+  }
   return (
     <div className="flex flex-col px-6 py-3">
       <h2 className="text-lg font-bold mb-4">Research Papers Form</h2>

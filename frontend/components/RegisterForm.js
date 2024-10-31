@@ -23,6 +23,8 @@ const RegisterForm = () => {
       return;
     }
 
+    setError("");
+
     try {
       const res = await axios.post("api/register", {
         name,

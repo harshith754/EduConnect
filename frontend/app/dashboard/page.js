@@ -81,6 +81,7 @@ export default function Page() {
   return (
     <div className="w-full h-screen overflow-y-auto">
       <Navbar />
+
       {renderTabContent()}
     </div>
   );

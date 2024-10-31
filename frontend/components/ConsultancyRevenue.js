@@ -6,10 +6,12 @@ import { CldImage, CldUploadButton } from "next-cloudinary";
 import { toast } from "sonner";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { Spinner } from "./Spinner";
 
 export const ConsultancyRevenue = () => {
   const [formEditable, setFormEditable] = useState(true);
   const { data: session } = useSession();
+  const [isLoading, setIsLoading] = useState(false);
 
   // Initial state for consultancy and training revenue
   const [consultancyData, setConsultancyData] = useState([
@@ -27,6 +29,8 @@ export const ConsultancyRevenue = () => {
   }, []);
 
   const getConsultancyData = async () => {
+    setIsLoading(true);
+
     try {
       const { data } = await axios.get(
         `/api/consultancy-revenue/${session.user.email}`,
@@ -45,6 +49,8 @@ export const ConsultancyRevenue = () => {
     } catch (error) {
       console.error("Error fetching consultancy training data:", error);
       toast.error("Failed to load data");
+    } finally {
+      setIsLoading(false);
     }
   };
   // Add a new consultancy record
@@ -85,7 +91,6 @@ export const ConsultancyRevenue = () => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Consultancy and Training Revenue submitted:", consultancyData);
 
     axios
       .post("/api/consultancy-revenue", {
@@ -101,7 +106,9 @@ export const ConsultancyRevenue = () => {
         toast.error("Failed to submit form");
       });
   };
-
+  if (isLoading) {
+    return <Spinner />;
+  }
   return (
     <div className="flex flex-col px-6 py-3">
       <h2 className="text-lg font-bold mb-4">

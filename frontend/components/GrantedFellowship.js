@@ -6,10 +6,12 @@ import { toast } from "sonner";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { CldImage, CldUploadButton } from "next-cloudinary";
+import { Spinner } from "./Spinner";
 
 export const GrantedFellowship = () => {
   const { data: session } = useSession();
   const [formEditable, setFormEditable] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Initial State for Fellowship Support
   const [fellowshipSupport, setFellowshipSupport] = useState([
@@ -67,6 +69,8 @@ export const GrantedFellowship = () => {
 
   // Fetch existing fellowship support data from API
   const getSupportDetails = async () => {
+    setIsLoading(true);
+
     const { data } = await axios.get(
       `/api/fellowship-support/${session.user.email}`,
     );
@@ -80,6 +84,7 @@ export const GrantedFellowship = () => {
     setFellowshipSupport(formattedSupports);
     setFormEditable(false);
     toast("Info loaded");
+    setIsLoading(false);
   };
 
   // Handle form submission
@@ -96,6 +101,9 @@ export const GrantedFellowship = () => {
     });
     setFormEditable(false);
   };
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="flex flex-col px-6 py-3">

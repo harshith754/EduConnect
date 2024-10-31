@@ -6,10 +6,12 @@ import { toast } from "sonner";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { CldImage, CldUploadButton } from "next-cloudinary";
+import { Spinner } from "./Spinner";
 
 export const CommitteeDetails = () => {
   const { data: session } = useSession();
   const [formEditable, setFormEditable] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Initial State for Committee Details
   const [committeeDetails, setCommitteeDetails] = useState([
@@ -63,6 +65,8 @@ export const CommitteeDetails = () => {
 
   // Fetch existing committee details from API
   const getCommitteeDetails = async () => {
+    setIsLoading(true);
+
     const { data } = await axios.get(
       `/api/committee-details/${session.user.email}`,
     );
@@ -76,6 +80,7 @@ export const CommitteeDetails = () => {
     setCommitteeDetails(formattedDetails);
     setFormEditable(false);
     toast("Info loaded");
+    setIsLoading(false);
   };
 
   // Handle form submission
@@ -92,7 +97,9 @@ export const CommitteeDetails = () => {
     });
     setFormEditable(false);
   };
-
+  if (isLoading) {
+    return <Spinner />;
+  }
   return (
     <div className="flex flex-col px-6 py-3">
       <h2 className="text-lg font-bold mb-4">

@@ -17,6 +17,7 @@ export default function LoginForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    setError("");
     try {
       const res = await signIn("credentials", {
         email,

@@ -13,9 +13,12 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
+import { Spinner } from "./Spinner";
 
 export const LectureDetails = () => {
   const { data: session } = useSession();
+  const [isLoading, setIsLoading] = useState(false);
+
   const [formEditable, setFormEditable] = useState(true);
 
   const [lectures, setLectures] = useState([
@@ -62,6 +65,8 @@ export const LectureDetails = () => {
   }, []);
 
   const getLectureDetails = async () => {
+    setIsLoading(true);
+
     const { data } = await axios.get(
       `/api/lectures-delivered/${session.user.email}`,
     );
@@ -76,6 +81,7 @@ export const LectureDetails = () => {
     setLectures(formattedLectures);
     setFormEditable(false);
     toast("Info loaded");
+    setIsLoading(false);
   };
 
   const handleSubmit = (e) => {
@@ -91,7 +97,9 @@ export const LectureDetails = () => {
     });
     setFormEditable(false);
   };
-
+  if (isLoading) {
+    return <Spinner />;
+  }
   return (
     <div className="flex flex-col px-6 py-3">
       <h2 className="text-lg font-bold mb-4">Lecture Details Form</h2>

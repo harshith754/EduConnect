@@ -12,6 +12,7 @@ import {
 import { toast } from "sonner";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { Spinner } from "./Spinner";
 
 const ProfessionalDetails = () => {
   // State for form fields'
@@ -34,6 +35,8 @@ const ProfessionalDetails = () => {
   ]);
 
   const [message, setMessage] = useState("");
+
+  const [isLoading, setIsLoading] = useState(false);
 
   useState(() => {
     if (message !== "");
@@ -86,6 +89,7 @@ const ProfessionalDetails = () => {
   }, []);
 
   const getProfessionalDetails = async () => {
+    setIsLoading(true);
     const { data } = await axios.get(
       `/api/professional-details/${session.user.email}`,
     );
@@ -107,6 +111,7 @@ const ProfessionalDetails = () => {
       setFormEditable(false);
       toast("Info loaded");
     }
+    setIsLoading(false);
   };
 
   // Function to handle form submission
@@ -171,6 +176,10 @@ const ProfessionalDetails = () => {
     updatedEducations[index][field] = value;
     setEducationalQualifications(updatedEducations);
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="flex flex-col px-6 py-3">

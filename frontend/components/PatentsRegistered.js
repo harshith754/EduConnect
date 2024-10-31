@@ -13,8 +13,10 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
+import { Spinner } from "./Spinner";
 export const PatentsRegistered = () => {
   const { data: session } = useSession();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [patents, setPatents] = useState([
     {
@@ -65,6 +67,7 @@ export const PatentsRegistered = () => {
   }, []);
 
   const getPatentDetails = async () => {
+    setIsLoading(true);
     const { data } = await axios.get(
       `/api/patents-registered/${session.user.email}`,
     );
@@ -80,6 +83,7 @@ export const PatentsRegistered = () => {
     setPatents(formattedPatents);
     setFormEditable(false);
     toast("Patent info loaded");
+    setIsLoading(false);
   };
 
   const handleSubmit = (e) => {
@@ -96,7 +100,9 @@ export const PatentsRegistered = () => {
     setFormEditable(false);
     // Add your logic for submitting the patents data
   };
-
+  if (isLoading) {
+    return <Spinner />;
+  }
   return (
     <div className="flex flex-col px-6 py-3">
       <h2 className="text-lg font-bold mb-4">Patent Information Form</h2>

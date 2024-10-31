@@ -13,9 +13,11 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
+import { Spinner } from "./Spinner";
 
 export const AppreciationAwards = () => {
   const { data: session } = useSession();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [awards, setAwards] = useState([
     {
@@ -58,6 +60,7 @@ export const AppreciationAwards = () => {
 
   const [formEditable, setFormEditable] = useState(true);
   const getAwardDetails = async () => {
+    setIsLoading(true);
     const { data } = await axios.get(
       `/api/awards-received/${session.user.email}`,
     );
@@ -69,6 +72,7 @@ export const AppreciationAwards = () => {
     setAwards(formattedAwards);
     setFormEditable(false);
     toast("Award info loaded");
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -90,6 +94,9 @@ export const AppreciationAwards = () => {
     setFormEditable(false);
     // Add your logic for submitting the awards data
   };
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="flex flex-col px-6 py-3">

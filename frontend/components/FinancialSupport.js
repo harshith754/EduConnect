@@ -6,10 +6,12 @@ import { toast } from "sonner";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { CldImage, CldUploadButton } from "next-cloudinary";
+import { Spinner } from "./Spinner";
 
 const FinancialSupport = () => {
   const { data: session } = useSession();
   const [formEditable, setFormEditable] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Initial State for Financial Support
   const [financialSupport, setFinancialSupport] = useState([
@@ -55,13 +57,9 @@ const FinancialSupport = () => {
     setFinancialSupport(updatedFinancialSupport);
   };
 
-  // Handle certificate upload
-  const handleCertificateUpload = (index, file) => {
-    const updatedFinancialSupport = [...financialSupport];
-    updatedFinancialSupport[index].certificate = file;
-    setFinancialSupport(updatedFinancialSupport);
-  };
   const getSupportDetails = async () => {
+    setIsLoading(true);
+
     const { data } = await axios.get(
       `/api/financial-support/${session.user.email}`,
     );
@@ -75,6 +73,7 @@ const FinancialSupport = () => {
     setFinancialSupport(formattedSupports);
     setFormEditable(false);
     toast("Info loaded");
+    setIsLoading(false);
   };
   useEffect(() => {
     getSupportDetails();
@@ -96,7 +95,9 @@ const FinancialSupport = () => {
     });
     setFormEditable(false);
   };
-
+  if (isLoading) {
+    return <Spinner />;
+  }
   return (
     <div className="flex flex-col px-6 py-3">
       <h2 className="text-lg font-bold mb-4">

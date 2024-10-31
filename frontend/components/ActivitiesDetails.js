@@ -6,10 +6,12 @@ import { toast } from "sonner";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import { CldImage, CldUploadButton } from "next-cloudinary";
+import { Spinner } from "./Spinner";
 
 export const ActivitiesDetails = () => {
   const { data: session } = useSession();
   const [formEditable, setFormEditable] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Initial State for Extracurricular Activities
   const [activities, setActivities] = useState([
@@ -65,6 +67,8 @@ export const ActivitiesDetails = () => {
 
   // Fetch existing activities data from API
   const getActivityDetails = async () => {
+    setIsLoading(true);
+
     const { data } = await axios.get(
       `/api/activity-details/${session.user.email}`,
     );
@@ -78,6 +82,7 @@ export const ActivitiesDetails = () => {
     setActivities(formattedDetails);
     setFormEditable(false);
     toast("Info loaded");
+    setIsLoading(false);
   };
 
   // Handle form submission
@@ -94,7 +99,9 @@ export const ActivitiesDetails = () => {
     });
     setFormEditable(false);
   };
-
+  if (isLoading) {
+    return <Spinner />;
+  }
   return (
     <div className="flex flex-col px-6 py-3">
       <h2 className="text-lg font-bold mb-4">

@@ -18,12 +18,15 @@ import {
   SelectValue,
 } from "./ui/select";
 import { toast } from "sonner";
+import { Spinner } from "./Spinner";
 
 export const FacultyDisplay = () => {
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -31,6 +34,8 @@ export const FacultyDisplay = () => {
   }, []);
 
   const getInformation = async () => {
+    setIsLoading(true);
+
     const selectedFields = [
       "email",
       "fullName",
@@ -52,6 +57,8 @@ export const FacultyDisplay = () => {
     console.log(JSON.stringify(data.postData));
     setData(data.postData);
     setFilteredData(data.postData); // Initialize filtered data
+
+    setIsLoading(false);
   };
 
   // Function to handle search and department filter
@@ -84,7 +91,9 @@ export const FacultyDisplay = () => {
   useEffect(() => {
     handleFilter();
   }, [searchQuery, selectedDepartment, data]);
-
+  if (isLoading) {
+    return <Spinner />;
+  }
   return (
     <div className="flex flex-col px-6 py-3 font-normal">
       <h2 className="text-lg font-bold mb-4">All faculties</h2>

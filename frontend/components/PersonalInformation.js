@@ -14,6 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CldImage, CldUploadButton } from "next-cloudinary";
+import { Spinner } from "./Spinner";
 
 const PersonalInformation = () => {
   // State for form fields
@@ -28,28 +29,34 @@ const PersonalInformation = () => {
 
   const [imageId, setImageId] = useState("");
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const { data: session } = useSession();
   // Function to handle form submission
   const getPersonalDetails = async () => {
-    const { data } = await axios.get(
-      `/api/personal-details/${session.user.email}`,
-    );
+    try {
+      setIsLoading(true);
+      const { data } = await axios.get(
+        `/api/personal-details/${session.user.email}`,
+      );
 
-    console.log(data.personalDetails);
-    if (data && data.personalDetails) {
-      setFullName(data.personalDetails.fullName);
-      setGender(data.personalDetails.gender);
-      setDateOfBirth(data.personalDetails.dateOfBirth);
-      setAadharDetails(data.personalDetails.aadharDetails);
-      setBloodGroup(data.personalDetails.bloodGroup);
-      setFacultyId(data.personalDetails.facultyId);
-      setMobileNumber(data.personalDetails.mobileNumber);
-      setImageId(data.personalDetails.imageId);
-
-      console.log(data.personalDetails);
-      setFormEditable(false);
+      if (data && data.personalDetails) {
+        setFullName(data.personalDetails.fullName);
+        setGender(data.personalDetails.gender);
+        setDateOfBirth(data.personalDetails.dateOfBirth);
+        setAadharDetails(data.personalDetails.aadharDetails);
+        setBloodGroup(data.personalDetails.bloodGroup);
+        setFacultyId(data.personalDetails.facultyId);
+        setMobileNumber(data.personalDetails.mobileNumber);
+        setImageId(data.personalDetails.imageId);
+        setFormEditable(false);
+      }
+      toast("Info loaded");
+    } catch (error) {
+      toast.error("Failed to load information");
+    } finally {
+      setIsLoading(false);
     }
-    toast("Info loaded");
   };
   useEffect(() => {
     getPersonalDetails();
@@ -119,6 +126,10 @@ const PersonalInformation = () => {
     const mobileRegex = /^[0-9]{10}$/; // Assumes a 10-digit mobile number
     return mobileRegex.test(mobileNumber);
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="flex flex-col px-6 py-3">

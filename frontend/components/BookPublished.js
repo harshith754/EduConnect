@@ -13,9 +13,11 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
+import { Spinner } from "./Spinner";
 
 export const BookPublished = () => {
   const { data: session } = useSession();
+  const [isLoading, setIsLoading] = useState(false);
 
   const [books, setBooks] = useState([
     {
@@ -60,6 +62,7 @@ export const BookPublished = () => {
 
   const [formEditable, setFormEditable] = useState(true);
   const getBookDetails = async () => {
+    setIsLoading(true);
     const { data } = await axios.get(
       `/api/books-published/${session.user.email}`,
     );
@@ -71,6 +74,7 @@ export const BookPublished = () => {
     setBooks(formattedBooks);
     setFormEditable(false);
     toast("Info loaded");
+    setIsLoading(false);
   };
   useEffect(() => {
     getBookDetails();
@@ -90,7 +94,9 @@ export const BookPublished = () => {
     setFormEditable(false);
     // Add your logic for submitting the books data
   };
-
+  if (isLoading) {
+    return <Spinner />;
+  }
   return (
     <div className="flex flex-col px-6 py-3">
       <h2 className="text-lg font-bold mb-4">Book Information Form:</h2>
