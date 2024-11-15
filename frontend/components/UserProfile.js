@@ -23,11 +23,13 @@ import { CldImage } from "next-cloudinary";
 import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import ProfileDownload from "./ProfileDownload";
+import { Spinner } from "./Spinner";
 
 export const UserProfile = ({ userEmail = "" }) => {
   const { data: session } = useSession();
 
   const [facultyDetails, setFacultyDetails] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const [showCards, setShowCards] = useState({
     personalInfo: true,
@@ -52,6 +54,7 @@ export const UserProfile = ({ userEmail = "" }) => {
 
   const getPersonalDetails = async () => {
     if (session === undefined) return;
+    setIsLoading(true);
 
     if (userEmail != "") {
       const { data } = await axios.get(`/api/faculty-details/${userEmail}`);
@@ -64,6 +67,7 @@ export const UserProfile = ({ userEmail = "" }) => {
 
       setFacultyDetails(data.facultyDetails);
     }
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -80,6 +84,9 @@ export const UserProfile = ({ userEmail = "" }) => {
       pagebreak: { mode: ["avoid-all", "css", "legacy"] },
       filename: `${session?.user.name}'s Profile.pdf`,
     });
+  }
+  if (isLoading) {
+    return <Spinner />;
   }
   return (
     <div

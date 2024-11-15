@@ -66,22 +66,26 @@ export const LectureDetails = () => {
 
   const getLectureDetails = async () => {
     setIsLoading(true);
+    try {
+      const { data } = await axios.get(
+        `/api/lectures-delivered/${session.user.email}`,
+      );
+      if (data.lecturesDelivered === null) return;
+      const reqData = data.lecturesDelivered;
+      console.log(reqData);
+      const formattedLectures = reqData.lectures.map(
+        ({ lecturesDeliveredId, ...rest }) => rest,
+      );
 
-    const { data } = await axios.get(
-      `/api/lectures-delivered/${session.user.email}`,
-    );
-    if (data.lecturesDelivered === null) return;
-    const reqData = data.lecturesDelivered;
-    console.log(reqData);
-    const formattedLectures = reqData.lectures.map(
-      ({ lecturesDeliveredId, ...rest }) => rest,
-    );
-
-    console.log(formattedLectures);
-    setLectures(formattedLectures);
-    setFormEditable(false);
-    toast("Info loaded");
-    setIsLoading(false);
+      console.log(formattedLectures);
+      setLectures(formattedLectures);
+      setFormEditable(false);
+      toast("Info loaded");
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSubmit = (e) => {

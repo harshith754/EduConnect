@@ -10,6 +10,7 @@ const ExcelDownload = ({ jsonData }) => {
       // Extract personal details
       const personalDetails = {};
       const professionalDetails = {};
+      const counts = {}; // New object for counts
 
       // Extract personal details
       if (item.email) personalDetails.Email = item.email;
@@ -53,12 +54,27 @@ const ExcelDownload = ({ jsonData }) => {
         professionalDetails["Year of Recognition"] =
           item.professionalDetails.yearOfRecognition;
 
+      // Add counts
+      if (item.booksPublished?._count?.books !== undefined) {
+        counts["Number of Books"] = item.booksPublished._count.books;
+      }
+      if (item.patentsRegistered?._count?.patents !== undefined) {
+        counts["Number of Patents"] = item.patentsRegistered._count.patents;
+      }
+      if (item.awardsReceived?._count?.awards !== undefined) {
+        counts["Number of Awards"] = item.awardsReceived._count.awards;
+      }
+
       let isPushed = false;
 
       // Extract books
       if (item.booksPublished?.books) {
         item.booksPublished.books.forEach((book) => {
-          const rowData = { ...personalDetails, ...professionalDetails };
+          const rowData = {
+            ...personalDetails,
+            ...professionalDetails,
+            ...counts,
+          };
 
           if (book.title) rowData.Title = book.title;
           if (book.publishers) rowData.Publishers = book.publishers;
@@ -75,7 +91,11 @@ const ExcelDownload = ({ jsonData }) => {
       // Extract patents
       if (item.patentsRegistered?.patents) {
         item.patentsRegistered.patents.forEach((patent) => {
-          const rowData = { ...personalDetails, ...professionalDetails };
+          const rowData = {
+            ...personalDetails,
+            ...professionalDetails,
+            ...counts,
+          };
 
           if (patent.patentType) rowData["Patent Type"] = patent.patentType;
           if (patent.applicationNo)
@@ -97,7 +117,11 @@ const ExcelDownload = ({ jsonData }) => {
       // Extract awards
       if (item.awardsReceived?.awards) {
         item.awardsReceived.awards.forEach((award) => {
-          const rowData = { ...personalDetails, ...professionalDetails };
+          const rowData = {
+            ...personalDetails,
+            ...professionalDetails,
+            ...counts,
+          };
 
           if (award.awardName) rowData["Award Name"] = award.awardName;
           if (award.agencyName) rowData["Agency Name"] = award.agencyName;
@@ -114,7 +138,7 @@ const ExcelDownload = ({ jsonData }) => {
       }
 
       if (!isPushed) {
-        data.push({ ...personalDetails, ...professionalDetails });
+        data.push({ ...personalDetails, ...professionalDetails, ...counts });
       }
     });
 

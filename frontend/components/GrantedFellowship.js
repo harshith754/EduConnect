@@ -70,21 +70,25 @@ export const GrantedFellowship = () => {
   // Fetch existing fellowship support data from API
   const getSupportDetails = async () => {
     setIsLoading(true);
+    try {
+      const { data } = await axios.get(
+        `/api/fellowship-support/${session.user.email}`,
+      );
+      console.log(data);
+      if (data.fellowshipSupport === null) return;
 
-    const { data } = await axios.get(
-      `/api/fellowship-support/${session.user.email}`,
-    );
-    console.log(data);
-    if (data.fellowshipSupport === null) return;
+      const reqData = data.fellowshipSupport.fellowships;
+      const formattedSupports = reqData.map(({ id, ...rest }) => rest);
+      if (formattedSupports.length === 0) return;
 
-    const reqData = data.fellowshipSupport.fellowships;
-    const formattedSupports = reqData.map(({ id, ...rest }) => rest);
-    if (formattedSupports.length === 0) return;
-
-    setFellowshipSupport(formattedSupports);
-    setFormEditable(false);
-    toast("Info loaded");
-    setIsLoading(false);
+      setFellowshipSupport(formattedSupports);
+      setFormEditable(false);
+      toast("Info loaded");
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Handle form submission

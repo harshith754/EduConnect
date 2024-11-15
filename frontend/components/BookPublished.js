@@ -63,18 +63,24 @@ export const BookPublished = () => {
   const [formEditable, setFormEditable] = useState(true);
   const getBookDetails = async () => {
     setIsLoading(true);
-    const { data } = await axios.get(
-      `/api/books-published/${session.user.email}`,
-    );
 
-    if (data.booksPublished === null) return;
-    const reqData = data.booksPublished;
-    console.log(reqData);
-    const formattedBooks = reqData.books.map(({ id, ...rest }) => rest);
-    setBooks(formattedBooks);
-    setFormEditable(false);
-    toast("Info loaded");
-    setIsLoading(false);
+    try {
+      const { data } = await axios.get(
+        `/api/books-published/${session.user.email}`,
+      );
+
+      if (data.booksPublished === null) return;
+      const reqData = data.booksPublished;
+      console.log(reqData);
+      const formattedBooks = reqData.books.map(({ id, ...rest }) => rest);
+      setBooks(formattedBooks);
+      setFormEditable(false);
+      toast("Info loaded");
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsLoading(false);
+    }
   };
   useEffect(() => {
     getBookDetails();

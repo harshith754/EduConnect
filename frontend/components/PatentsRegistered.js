@@ -68,22 +68,28 @@ export const PatentsRegistered = () => {
 
   const getPatentDetails = async () => {
     setIsLoading(true);
-    const { data } = await axios.get(
-      `/api/patents-registered/${session.user.email}`,
-    );
 
-    if (data.patentsRegistered === null) return;
-    const reqData = data.patentsRegistered;
-    console.log(reqData);
-    const formattedPatents = reqData.patents.map(({ id, ...rest }) => rest);
+    try {
+      const { data } = await axios.get(
+        `/api/patents-registered/${session.user.email}`,
+      );
 
-    if (formattedPatents.length === 0) {
-      return;
+      if (data.patentsRegistered === null) return;
+      const reqData = data.patentsRegistered;
+      console.log(reqData);
+      const formattedPatents = reqData.patents.map(({ id, ...rest }) => rest);
+
+      if (formattedPatents.length === 0) {
+        return;
+      }
+      setPatents(formattedPatents);
+      setFormEditable(false);
+      toast("Patent info loaded");
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsLoading(false);
     }
-    setPatents(formattedPatents);
-    setFormEditable(false);
-    toast("Patent info loaded");
-    setIsLoading(false);
   };
 
   const handleSubmit = (e) => {

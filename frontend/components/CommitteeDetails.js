@@ -67,20 +67,25 @@ export const CommitteeDetails = () => {
   const getCommitteeDetails = async () => {
     setIsLoading(true);
 
-    const { data } = await axios.get(
-      `/api/committee-details/${session.user.email}`,
-    );
-    console.log(data);
-    if (data.committeeDetails === null) return;
+    try {
+      const { data } = await axios.get(
+        `/api/committee-details/${session.user.email}`,
+      );
+      console.log(data);
+      if (data.committeeDetails === null) return;
 
-    const reqData = data.committeeDetails.committees;
-    const formattedDetails = reqData.map(({ id, ...rest }) => rest);
-    if (formattedDetails.length === 0) return;
+      const reqData = data.committeeDetails.committees;
+      const formattedDetails = reqData.map(({ id, ...rest }) => rest);
+      if (formattedDetails.length === 0) return;
 
-    setCommitteeDetails(formattedDetails);
-    setFormEditable(false);
-    toast("Info loaded");
-    setIsLoading(false);
+      setCommitteeDetails(formattedDetails);
+      setFormEditable(false);
+      toast("Info loaded");
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Handle form submission

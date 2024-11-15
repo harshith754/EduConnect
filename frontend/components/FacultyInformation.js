@@ -4,6 +4,7 @@ import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import { Label } from "./ui/label";
 import ExcelDownload from "./ExcelDownload";
+import { useSession } from "next-auth/react";
 
 export const FacultyInformation = () => {
   const [selectedFields, setSelectedFields] = useState([]);
@@ -13,6 +14,11 @@ export const FacultyInformation = () => {
 
   const [data, setData] = useState({});
 
+  const { data: session } = useSession();
+
+  if (session?.user?.role !== "admin") {
+    return <div>Only accessable to admins.</div>;
+  }
   const availableFields = [
     {
       title: "User",

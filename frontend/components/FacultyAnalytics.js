@@ -15,6 +15,7 @@ import {
 import { DepartmentDistribution } from "@/charts/DepartmentDistribution";
 import { QualificationDistribution } from "@/charts/QualificationDistribution";
 import PublicationsAndResearch from "@/charts/PublicationsAndResearch";
+import { useSession } from "next-auth/react";
 
 const facultyData = [
   {
@@ -241,7 +242,11 @@ const facultyData = [
 
 export const FacultyAnalytics = () => {
   const [data, setData] = useState(facultyData);
+  const { data: session } = useSession();
 
+  if (session?.user?.role !== "admin") {
+    return <div>Only accessable to admins.</div>;
+  }
   return (
     <div className="flex flex-col px-6 py-3 gap-5">
       <div className="w-full flex flex-row gap-2 ">

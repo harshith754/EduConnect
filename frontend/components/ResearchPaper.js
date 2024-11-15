@@ -64,20 +64,25 @@ const ResearchAndPublications = () => {
   const getResearchPapers = async () => {
     setIsLoading(true);
 
-    const { data } = await axios.get(
-      `/api/papers-published/${session.user.email}`,
-    );
+    try {
+      const { data } = await axios.get(
+        `/api/papers-published/${session.user.email}`,
+      );
 
-    const reqData = data.papersPublished;
-    const formattedPapers = reqData.papers.map(
-      ({ papersPublishedId, ...rest }) => rest,
-    );
+      const reqData = data.papersPublished;
+      const formattedPapers = reqData.papers.map(
+        ({ papersPublishedId, ...rest }) => rest,
+      );
 
-    setResearchPapers(formattedPapers);
+      setResearchPapers(formattedPapers);
 
-    setFormEditable(false);
-    toast("Info loaded");
-    setIsLoading(false);
+      setFormEditable(false);
+      toast("Info loaded");
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Function to handle form submission

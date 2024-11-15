@@ -63,6 +63,11 @@ export async function POST(req) {
                       selectedFields.includes("dateOfPublication"),
                   },
                 },
+                _count: {
+                  select: {
+                    books: true,
+                  },
+                },
               },
             }
           : false,
@@ -80,6 +85,11 @@ export async function POST(req) {
                     publishedYear: selectedFields.includes("publishedYear"),
                   },
                 },
+                _count: {
+                  select: {
+                    patents: true,
+                  },
+                },
               },
             }
           : false,
@@ -94,6 +104,11 @@ export async function POST(req) {
                     agencyAddress: selectedFields.includes("agencyAddress"),
                     yearReceived: selectedFields.includes("yearReceived"),
                     hasFellowship: selectedFields.includes("hasFellowship"),
+                  },
+                },
+                _count: {
+                  select: {
+                    awards: true,
                   },
                 },
               },

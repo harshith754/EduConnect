@@ -68,26 +68,31 @@ export const ActivitiesDetails = () => {
   // Fetch existing activities data from API
   const getActivityDetails = async () => {
     setIsLoading(true);
+    try {
+      const { data } = await axios.get(
+        `/api/activity-details/${session.user.email}`,
+      );
+      console.log(data);
+      if (data.activityDetails === null) return;
 
-    const { data } = await axios.get(
-      `/api/activity-details/${session.user.email}`,
-    );
-    console.log(data);
-    if (data.activityDetails === null) return;
+      const reqData = data.activityDetails.activities;
+      const formattedDetails = reqData.map(({ id, ...rest }) => rest);
+      if (formattedDetails.length === 0) return;
 
-    const reqData = data.activityDetails.activities;
-    const formattedDetails = reqData.map(({ id, ...rest }) => rest);
-    if (formattedDetails.length === 0) return;
-
-    setActivities(formattedDetails);
-    setFormEditable(false);
-    toast("Info loaded");
-    setIsLoading(false);
+      setActivities(formattedDetails);
+      setFormEditable(false);
+      toast("Info loaded");
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
+
     console.log("Extracurricular Activities submitted:", {
       email: session.user.email,
       activities,

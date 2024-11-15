@@ -61,18 +61,23 @@ export const AppreciationAwards = () => {
   const [formEditable, setFormEditable] = useState(true);
   const getAwardDetails = async () => {
     setIsLoading(true);
-    const { data } = await axios.get(
-      `/api/awards-received/${session.user.email}`,
-    );
+    try {
+      const { data } = await axios.get(
+        `/api/awards-received/${session.user.email}`,
+      );
 
-    if (data.awardsReceived == null) return;
-    const reqData = data.awardsReceived;
-    console.log(reqData);
-    const formattedAwards = reqData.awards.map(({ id, ...rest }) => rest);
-    setAwards(formattedAwards);
-    setFormEditable(false);
-    toast("Award info loaded");
-    setIsLoading(false);
+      if (data.awardsReceived == null) return;
+      const reqData = data.awardsReceived;
+      console.log(reqData);
+      const formattedAwards = reqData.awards.map(({ id, ...rest }) => rest);
+      setAwards(formattedAwards);
+      setFormEditable(false);
+      toast("Award info loaded");
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {

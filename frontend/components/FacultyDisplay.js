@@ -48,17 +48,21 @@ export const FacultyDisplay = () => {
     ];
 
     const selectedTitles = ["User", "PersonalDetails", "ProfessionalDetails"];
+    try {
+      const { data } = await axios.post("/api/get-information", {
+        selectedFields,
+        selectedTitles,
+      });
 
-    const { data } = await axios.post("/api/get-information", {
-      selectedFields,
-      selectedTitles,
-    });
-
-    console.log(JSON.stringify(data.postData));
-    setData(data.postData);
-    setFilteredData(data.postData); // Initialize filtered data
-
-    setIsLoading(false);
+      console.log(JSON.stringify(data.postData));
+      setData(data.postData);
+      setFilteredData(data.postData);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsLoading(false);
+    }
+    // Initialize filtered data
   };
 
   // Function to handle search and department filter

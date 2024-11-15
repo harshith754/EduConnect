@@ -59,21 +59,25 @@ const FinancialSupport = () => {
 
   const getSupportDetails = async () => {
     setIsLoading(true);
+    try {
+      const { data } = await axios.get(
+        `/api/financial-support/${session.user.email}`,
+      );
+      console.log(data);
+      if (data.financialSupport === null) return;
 
-    const { data } = await axios.get(
-      `/api/financial-support/${session.user.email}`,
-    );
-    console.log(data);
-    if (data.financialSupport === null) return;
+      const reqData = data.financialSupport.supports;
+      const formattedSupports = reqData.map(({ id, ...rest }) => rest);
+      if (formattedSupports.length === 0) return;
 
-    const reqData = data.financialSupport.supports;
-    const formattedSupports = reqData.map(({ id, ...rest }) => rest);
-    if (formattedSupports.length === 0) return;
-
-    setFinancialSupport(formattedSupports);
-    setFormEditable(false);
-    toast("Info loaded");
-    setIsLoading(false);
+      setFinancialSupport(formattedSupports);
+      setFormEditable(false);
+      toast("Info loaded");
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setIsLoading(false);
+    }
   };
   useEffect(() => {
     getSupportDetails();
