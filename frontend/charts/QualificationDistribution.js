@@ -1,41 +1,26 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  XAxis,
-  YAxis,
-  ResponsiveContainer,
-} from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import {
-  ChartConfig,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export const description =
-  "A stacked bar chart showing student distribution across departments and programs";
-
-const chartData = [
-  { department: "Comps", phd: 15, mtech: 50, mca: 80, msc: 30 },
-  { department: "EXTC", phd: 10, mtech: 40, mca: 60, msc: 25 },
-  { department: "AIML", phd: 20, mtech: 70, mca: 90, msc: 40 },
-  { department: "DS", phd: 12, mtech: 45, mca: 75, msc: 35 },
-];
+  "A stacked bar chart showing faculty distribution across departments and qualifications";
 
 const chartConfig = {
   phd: {
@@ -46,26 +31,98 @@ const chartConfig = {
     label: "MTech",
     color: "#FFA040",
   },
-  mca: {
-    label: "MCA",
+  btech: {
+    label: "BTech",
     color: "#FFC080",
   },
-  msc: {
-    label: "MSc",
+  other: {
+    label: "Other",
     color: "#FFE0C0",
   },
 };
+
 export function QualificationDistribution() {
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    getInformation();
+  }, []);
+
+  const getInformation = async () => {
+    setIsLoading(true);
+    const selectedFields = [
+      "email",
+      "gender",
+      "department",
+      "highestQualification",
+    ];
+    const selectedTitles = ["User", "PersonalDetails", "ProfessionalDetails"];
+    try {
+      const { data } = await axios.post("/api/get-information", {
+        selectedFields,
+        selectedTitles,
+      });
+
+      const processedData = processQualificationData(data.postData);
+      setData(processedData);
+    } catch (e) {
+      console.error("Error fetching information:", e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const processQualificationData = (apiData) => {
+    const departmentGroups = apiData.reduce((acc, item) => {
+      if (!item.professionalDetails) return acc;
+
+      const dept = item.professionalDetails.department;
+      const qualification =
+        item.professionalDetails.highestQualification || "Other";
+
+      if (!acc[dept]) {
+        acc[dept] = {
+          department: dept,
+          phd: 0,
+          mtech: 0,
+          btech: 0,
+          other: 0,
+        };
+      }
+
+      // Categorize qualifications
+      if (qualification.toLowerCase().includes("ph.d")) {
+        acc[dept].phd++;
+      } else if (qualification.toLowerCase().includes("m.tech")) {
+        acc[dept].mtech++;
+      } else if (qualification.toLowerCase().includes("b.tech")) {
+        acc[dept].btech++;
+      } else {
+        acc[dept].other++;
+      }
+
+      console.log(acc);
+      return acc;
+    }, {});
+
+    return Object.values(departmentGroups).sort((a, b) =>
+      a.department.localeCompare(b.department),
+    );
+  };
+
   return (
     <Card className="w-[95%]">
       <CardHeader>
         <CardTitle>Qualification Distribution</CardTitle>
-        <CardDescription>PhD, MTech, MCA, and MSc programs</CardDescription>
+        <CardDescription>
+          Faculty qualifications across departments
+        </CardDescription>
       </CardHeader>
       <CardContent className="w-full">
         <ChartContainer config={chartConfig} className="h-80">
           <BarChart
-            data={chartData}
+            data={data.length ? data : []}
             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
@@ -95,29 +152,20 @@ export function QualificationDistribution() {
               radius={[0, 0, 0, 0]}
             />
             <Bar
-              dataKey="mca"
+              dataKey="btech"
               stackId="a"
-              fill={chartConfig.mca.color}
+              fill={chartConfig.btech.color}
               radius={[0, 0, 0, 0]}
             />
             <Bar
-              dataKey="msc"
+              dataKey="other"
               stackId="a"
-              fill={chartConfig.msc.color}
+              fill={chartConfig.other.color}
               radius={[4, 4, 0, 0]}
             />
           </BarChart>
         </ChartContainer>
       </CardContent>
-      {/* <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          AIML department shows highest enrollment{" "}
-          <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Showing student distribution across departments and programs
-        </div>
-      </CardFooter> */}
     </Card>
   );
 }

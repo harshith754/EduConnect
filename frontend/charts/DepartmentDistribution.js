@@ -1,5 +1,5 @@
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-
+import axios from "axios";
 import {
   ChartConfig,
   ChartContainer,
@@ -12,11 +12,12 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { TrendingUp } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Spinner } from "@/components/Spinner";
+
 const chartConfig = {
   maleCount: {
     label: "Male Count",
@@ -28,14 +29,68 @@ const chartConfig = {
   },
 };
 
-const c1 = [
-  { department: " CE ", maleCount: 10, femaleCount: 5 },
-  { department: " DS ", maleCount: 8, femaleCount: 7 },
-  { department: "EXTC", maleCount: 12, femaleCount: 6 },
-  { department: "AIML", maleCount: 7, femaleCount: 8 },
-];
-
 export const DepartmentDistribution = () => {
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    getInformation();
+  }, []);
+
+  const getInformation = async () => {
+    setIsLoading(true);
+    const selectedFields = ["email", "gender", "department"];
+    const selectedTitles = ["User", "PersonalDetails", "ProfessionalDetails"];
+    try {
+      const { data } = await axios.post("/api/get-information", {
+        selectedFields,
+        selectedTitles,
+      });
+
+      // Process the data to group by department and gender
+      const departmentCounts = processDepartmentData(data.postData);
+      setData(departmentCounts);
+    } catch (e) {
+      console.error("Error fetching information:", e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const processDepartmentData = (apiData) => {
+    // Group data by department and count males and females
+    const departmentGroups = apiData.reduce((acc, item) => {
+      // Skip entries with missing professional details
+      if (!item.professionalDetails || !item.personalDetails) return acc;
+
+      const dept = item.professionalDetails.department;
+      const gender = item.personalDetails.gender;
+
+      // Initialize department if not exists
+      if (!acc[dept]) {
+        acc[dept] = { department: dept, maleCount: 0, femaleCount: 0 };
+      }
+
+      // Increment gender count
+      if (gender === "male") {
+        acc[dept].maleCount++;
+      } else if (gender === "female") {
+        acc[dept].femaleCount++;
+      }
+
+      return acc;
+    }, {});
+
+    // Convert object to array and sort
+    return Object.values(departmentGroups).sort((a, b) =>
+      a.department.localeCompare(b.department),
+    );
+  };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
   return (
     <Card className="w-[95%]">
       <CardHeader>
@@ -46,15 +101,14 @@ export const DepartmentDistribution = () => {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="min-h-[200px] p-5 ">
-          <BarChart accessibilityLayer data={c1}>
+          <BarChart accessibilityLayer data={data}>
             <CartesianGrid vertical={false} />
             <XAxis
               dataKey="department"
               tickLine={false}
               axisLine={false}
-              padding={{ left: 5, right: 5 }} // Adjust the padding
+              padding={{ left: 5, right: 5 }}
             />
-
             <ChartTooltip content={<ChartTooltipContent />} />
             <ChartLegend content={<ChartLegendContent />} />
             <Bar dataKey="maleCount" fill="var(--color-maleCount)" radius={4} />
@@ -66,18 +120,6 @@ export const DepartmentDistribution = () => {
           </BarChart>
         </ChartContainer>
       </CardContent>
-      {/* <CardFooter>
-        <div className="flex w-full items-start gap-2 text-sm">
-          <div className="grid gap-2">
-            <div className="flex items-center gap-2 font-medium leading-none">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-            </div>
-            <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              January - June 2024
-            </div>
-          </div>
-        </div>
-      </CardFooter> */}
     </Card>
   );
 };

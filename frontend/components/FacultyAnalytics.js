@@ -1,17 +1,5 @@
-import axios from "axios";
-import { CldImage } from "next-cloudinary";
 import React, { useEffect, useState } from "react";
 
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
 import { DepartmentDistribution } from "@/charts/DepartmentDistribution";
 import { QualificationDistribution } from "@/charts/QualificationDistribution";
 import PublicationsAndResearch from "@/charts/PublicationsAndResearch";
@@ -241,7 +229,6 @@ const facultyData = [
 ];
 
 export const FacultyAnalytics = () => {
-  const [data, setData] = useState(facultyData);
   const { data: session } = useSession();
 
   if (session?.user?.role !== "admin") {

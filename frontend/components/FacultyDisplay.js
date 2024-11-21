@@ -19,6 +19,7 @@ import {
 } from "./ui/select";
 import { toast } from "sonner";
 import { Spinner } from "./Spinner";
+import { useSession } from "next-auth/react";
 
 export const FacultyDisplay = () => {
   const [data, setData] = useState([]);
@@ -28,6 +29,11 @@ export const FacultyDisplay = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
+  const { data: session } = useSession();
+
+  if (session?.user?.role !== "admin") {
+    return <div>Only accessable to admins.</div>;
+  }
 
   useEffect(() => {
     getInformation();
