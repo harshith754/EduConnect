@@ -31,13 +31,13 @@ export const FacultyDisplay = () => {
   const router = useRouter();
   const { data: session } = useSession();
 
-  if (session?.user?.role !== "admin") {
-    return <div>Only accessable to admins.</div>;
-  }
-
   useEffect(() => {
     getInformation();
   }, []);
+
+  useEffect(() => {
+    handleFilter();
+  }, [searchQuery, selectedDepartment, data]);
 
   const getInformation = async () => {
     setIsLoading(true);
@@ -98,9 +98,10 @@ export const FacultyDisplay = () => {
     toast(`Applied filters.`);
   };
 
-  useEffect(() => {
-    handleFilter();
-  }, [searchQuery, selectedDepartment, data]);
+  if (session?.user?.role !== "admin") {
+    return <div>Only accessable to admins.</div>;
+  }
+
   if (isLoading) {
     return <Spinner />;
   }
