@@ -21,6 +21,7 @@ model User {
   role                String               @default("regular")
   createdAt           DateTime?            @default(now())
   updatedAt           DateTime?            @updatedAt
+  instituteName       String?
   personalDetails     PersonalDetails?
   professionalDetails ProfessionalDetails?
   booksPublished      BooksPublished?
@@ -216,6 +217,9 @@ model Paper {
   numberOfCitations String?
   PapersPublished   PapersPublished? @relation(fields: [papersPublishedId], references: [id])
   papersPublishedId Int?
+  isConference      Boolean?         @default(true)
+  isJournal         Boolean?         @default(false)
+  isBook            Boolean?         @default(false)
 }
 
 model CommitteeDetails {
