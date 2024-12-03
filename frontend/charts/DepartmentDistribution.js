@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { Spinner } from "@/components/Spinner";
+import { useSession } from "next-auth/react";
 
 const chartConfig = {
   maleCount: {
@@ -32,7 +33,7 @@ const chartConfig = {
 export const DepartmentDistribution = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
+  const { data: session } = useSession();
   useEffect(() => {
     getInformation();
   }, []);
@@ -45,6 +46,7 @@ export const DepartmentDistribution = () => {
       const { data } = await axios.post("/api/get-information", {
         selectedFields,
         selectedTitles,
+        instituteName: session?.user?.instituteName,
       });
 
       // Process the data to group by department and gender

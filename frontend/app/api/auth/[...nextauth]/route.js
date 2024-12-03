@@ -31,6 +31,7 @@ export const authOptions = {
             email: existingUser.email,
             role: existingUser.role,
             authorId: existingUser.authorId || "",
+            instituteName: existingUser.instituteName || "",
           };
         } catch (error) {
           console.log("Error: ", error);
@@ -44,6 +45,7 @@ export const authOptions = {
         token.id = user.id;
         token.role = user.role;
         token.authorId = user.authorId;
+        token.instituteName = user.instituteName;
       }
       return token;
     },
@@ -52,6 +54,7 @@ export const authOptions = {
         session.user.id = token.id;
         session.user.role = token.role;
         session.user.authorId = token.authorId;
+        session.user.instituteName = token.instituteName;
       }
       return session;
     },

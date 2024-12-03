@@ -256,46 +256,39 @@ export const UserProfile = ({ userEmail = "" }) => {
             </div>
           </CardContent>
         </Card>
-
         <Card
-          {...(!showCards.booksPublished && {
-            "data-html2canvas-ignore": true,
-          })}
-          className={`mt-3 ${!showCards.booksPublished ? "hidden" : ""}`}
+          {...(!showCards.researchPaper && { "data-html2canvas-ignore": true })}
+          className={`mt-3 ${!showCards.researchPaper ? "hidden" : ""}`}
         >
           <CardHeader className="flex flex-row items-center gap-10">
-            <CardTitle>Books Published</CardTitle>
+            <CardTitle>Research Paper Information</CardTitle>
             <Checkbox
-              checked={showCards.booksPublished}
-              onCheckedChange={() => toggleShowCard("booksPublished")}
+              checked={showCards.researchPaper}
+              onCheckedChange={() => toggleShowCard("researchPaper")}
               data-html2canvas-ignore
             />
           </CardHeader>
           <CardContent>
             <div className="rounded-xl shadow-xl">
               <Table>
-                <TableCaption>Details of Books Published</TableCaption>
+                <TableCaption>Research Papers</TableCaption>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Title</TableHead>
-                    <TableHead>Publishers</TableHead>
+                    <TableHead>Authors</TableHead>
                     <TableHead>Year of Publication</TableHead>
-                    <TableHead>ISBN</TableHead>
-                    <TableHead>Chapters</TableHead>
-                    <TableHead>Co-Authors</TableHead>
+                    <TableHead>Date of Publication</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {facultyDetails.booksPublished?.books.map((book) => (
-                    <TableRow key={book.id}>
+                  {facultyDetails.papersPublished?.papers.map((paper) => (
+                    <TableRow key={paper.id}>
                       <TableCell className="font-medium">
-                        {book.title}
+                        {paper.title}
                       </TableCell>
-                      <TableCell>{book.publishers}</TableCell>
-                      <TableCell>{book.yearOfPublication}</TableCell>
-                      <TableCell>{book.ISBN}</TableCell>
-                      <TableCell>{book.chapters}</TableCell>
-                      <TableCell>{book.coAuthors}</TableCell>
+                      <TableCell>{paper.authors}</TableCell>
+                      <TableCell>{paper.yearOfPublication}</TableCell>
+                      <TableCell>{paper.dateOfPublication}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -430,38 +423,44 @@ export const UserProfile = ({ userEmail = "" }) => {
         </Card>
 
         <Card
-          {...(!showCards.researchPaper && { "data-html2canvas-ignore": true })}
-          className={`mt-3 ${!showCards.researchPaper ? "hidden" : ""}`}
+          {...(!showCards.booksPublished && {
+            "data-html2canvas-ignore": true,
+          })}
+          className={`mt-3 ${!showCards.booksPublished ? "hidden" : ""}`}
         >
           <CardHeader className="flex flex-row items-center gap-10">
-            <CardTitle>Research Paper Information</CardTitle>
+            <CardTitle>Books Published</CardTitle>
             <Checkbox
-              checked={showCards.researchPaper}
-              onCheckedChange={() => toggleShowCard("researchPaper")}
+              checked={showCards.booksPublished}
+              onCheckedChange={() => toggleShowCard("booksPublished")}
               data-html2canvas-ignore
             />
           </CardHeader>
           <CardContent>
             <div className="rounded-xl shadow-xl">
               <Table>
-                <TableCaption>Research Papers</TableCaption>
+                <TableCaption>Details of Books Published</TableCaption>
                 <TableHeader>
                   <TableRow>
                     <TableHead>Title</TableHead>
-                    <TableHead>Authors</TableHead>
+                    <TableHead>Publishers</TableHead>
                     <TableHead>Year of Publication</TableHead>
-                    <TableHead>Date of Publication</TableHead>
+                    <TableHead>ISBN</TableHead>
+                    <TableHead>Chapters</TableHead>
+                    <TableHead>Co-Authors</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {facultyDetails.papersPublished?.papers.map((paper) => (
-                    <TableRow key={paper.id}>
+                  {facultyDetails.booksPublished?.books.map((book) => (
+                    <TableRow key={book.id}>
                       <TableCell className="font-medium">
-                        {paper.title}
+                        {book.title}
                       </TableCell>
-                      <TableCell>{paper.authors}</TableCell>
-                      <TableCell>{paper.yearOfPublication}</TableCell>
-                      <TableCell>{paper.dateOfPublication}</TableCell>
+                      <TableCell>{book.publishers}</TableCell>
+                      <TableCell>{book.yearOfPublication}</TableCell>
+                      <TableCell>{book.ISBN}</TableCell>
+                      <TableCell>{book.chapters}</TableCell>
+                      <TableCell>{book.coAuthors}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

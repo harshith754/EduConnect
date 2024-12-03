@@ -64,9 +64,15 @@ export const ImportPaperData = ({ data }) => {
 
   return (
     <div className="container mx-auto p-4">
-      <div>
-        <h1 className="text-2xl font-bold mb-6">Imported Publications</h1>
-        <Button onClick={handleSubmit}> Store to database </Button>
+      <div className="flex flex-row">
+        <div className="text-2xl font-bold mb-6">Imported Publications</div>
+        <Button
+          className="mx-auto w-[300px] text-white py-2 px-4 rounded"
+          onClick={handleSubmit}
+        >
+          {" "}
+          Store to database{" "}
+        </Button>
       </div>
 
       {shortendedPublications.map((publication, index) => (

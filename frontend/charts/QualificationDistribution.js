@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/chart";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useSession } from "next-auth/react";
+import { Spinner } from "@/components/Spinner";
 
 export const description =
   "A stacked bar chart showing faculty distribution across departments and qualifications";
@@ -44,6 +46,7 @@ const chartConfig = {
 export function QualificationDistribution() {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const { data: session } = useSession();
 
   useEffect(() => {
     getInformation();
@@ -62,6 +65,7 @@ export function QualificationDistribution() {
       const { data } = await axios.post("/api/get-information", {
         selectedFields,
         selectedTitles,
+        instituteName: session?.user?.instituteName,
       });
 
       const processedData = processQualificationData(data.postData);
@@ -102,7 +106,6 @@ export function QualificationDistribution() {
         acc[dept].other++;
       }
 
-      console.log(acc);
       return acc;
     }, {});
 
@@ -110,6 +113,9 @@ export function QualificationDistribution() {
       a.department.localeCompare(b.department),
     );
   };
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <Card className="w-[95%]">

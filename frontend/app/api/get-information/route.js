@@ -3,11 +3,16 @@ import { db } from "@/lib/db";
 
 export async function POST(req) {
   try {
-    const { selectedFields, selectedTitles } = await req.json();
-
-    // console.log(selectedFields, selectedTitles);
+    const {
+      selectedFields,
+      selectedTitles,
+      instituteName = "SPIT",
+    } = await req.json();
 
     const postData = await db.user.findMany({
+      where: {
+        instituteName: instituteName,
+      },
       select: {
         email: selectedFields.includes("email"),
         name: selectedFields.includes("name"),
@@ -109,6 +114,33 @@ export async function POST(req) {
                 _count: {
                   select: {
                     awards: true,
+                  },
+                },
+              },
+            }
+          : false,
+        papersPublished: selectedTitles.includes("PapersPublished")
+          ? {
+              select: {
+                papers: {
+                  select: {
+                    title: selectedFields.includes("title"),
+                    authors: selectedFields.includes("authors"),
+                    yearOfPublication:
+                      selectedFields.includes("yearOfPublication"),
+                    dateOfPublication:
+                      selectedFields.includes("dateOfPublication"),
+                    numberOfCitations:
+                      selectedFields.includes("numberOfCitations"),
+                    abstract: selectedFields.includes("abstract"),
+                    isConference: selectedFields.includes("isConference"),
+                    isJournal: selectedFields.includes("isJournal"),
+                    isBook: selectedFields.includes("isBook"),
+                  },
+                },
+                _count: {
+                  select: {
+                    papers: true,
                   },
                 },
               },
