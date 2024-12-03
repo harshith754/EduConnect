@@ -13,6 +13,13 @@ import {
   CardTitle,
 } from "./ui/card";
 import { Spinner } from "./Spinner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 const ResearchAndPublications = () => {
   const { data: session } = useSession();
@@ -26,8 +33,28 @@ const ResearchAndPublications = () => {
       yearOfPublication: "",
       dateOfPublication: "",
       linkToArticle: "",
+      publicationType: "", // Add a single field to replace multiple boolean flags
+      numberOfCitations: "",
+      abstract: "",
     },
   ]);
+
+  const dummy = [
+    {
+      abstract:
+        "Transverse flux machines (TFMs) are complex in construction and have a three dimensional flux path. Therefore, three dimensional (3D) finite element method (FEM) is usually used for the electromagnetic analysis of TFMs. Though the 3D-FEM technique is very accurate, computational time is very high. In the initial design and optimization process, fast and reasonably accurate analytical techniques ar...",
+      authors: "Priyanka Golatgaonkar, Rajaram Ugale, Bhalchandra Chaudhari",
+      dateOfPublication: "20-22 July 2022",
+      isBook: false,
+      isConference: true,
+      isJournal: false,
+      linkToArticle: "/xpl/conhome/9872524/proceeding",
+      numberOfCitations: "0",
+      title:
+        "Modification in Method of Images for Three Dimensional Magnetic Field Analysis of a Transverse Flux Permanent Magnet Machine",
+      yearOfPublication: "2022",
+    },
+  ];
 
   // Function to add a new research paper section
   const handleAddResearchPaper = () => {
@@ -39,6 +66,9 @@ const ResearchAndPublications = () => {
         yearOfPublication: "",
         dateOfPublication: "",
         linkToArticle: "",
+        publicationType: "", // Add a single field to replace multiple boolean flags
+        numberOfCitations: "",
+        abstract: "",
       },
     ]);
   };
@@ -63,19 +93,28 @@ const ResearchAndPublications = () => {
 
   const getResearchPapers = async () => {
     setIsLoading(true);
-
     try {
       const { data } = await axios.get(
         `/api/papers-published/${session.user.email}`,
       );
-
       const reqData = data.papersPublished;
-      const formattedPapers = reqData.papers.map(
-        ({ papersPublishedId, ...rest }) => rest,
-      );
-
+      const formattedPapers = reqData.papers.map((paper) => ({
+        title: paper.title || "",
+        authors: paper.authors || "",
+        yearOfPublication: paper.yearOfPublication || "",
+        dateOfPublication: paper.dateOfPublication || "",
+        linkToArticle: paper.linkToArticle || "",
+        numberOfCitations: paper.numberOfCitations || "",
+        abstract: paper.abstract || "",
+        publicationType: paper.isConference
+          ? "conference"
+          : paper.isJournal
+            ? "journal"
+            : paper.isBook
+              ? "book"
+              : "other",
+      }));
       setResearchPapers(formattedPapers);
-
       setFormEditable(false);
       toast("Info loaded");
     } catch (e) {
@@ -88,14 +127,28 @@ const ResearchAndPublications = () => {
   // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const formattedPapers = researchPapers.map((paper) => ({
+      title: paper.title || "",
+      authors: paper.authors || "",
+      yearOfPublication: paper.yearOfPublication || "",
+      dateOfPublication: paper.dateOfPublication || "",
+      linkToArticle: paper.linkToArticle || "",
+      numberOfCitations: paper.numberOfCitations || "",
+      isConference: paper.publicationType === "conference",
+      isJournal: paper.publicationType === "journal",
+      isBook: paper.publicationType === "book",
+      abstract: paper.abstract || "",
+    }));
+
     console.log("Papers submitted:", {
       email: session.user.email,
-      researchPapers,
+      formattedPapers,
     });
 
     axios.post("/api/papers-published", {
       email: session.user.email,
-      researchPapers,
+      researchPapers: formattedPapers,
     });
     setFormEditable(false);
   };
@@ -121,6 +174,20 @@ const ResearchAndPublications = () => {
                   value={paper.title}
                   onChange={(e) =>
                     handleResearchPaperChange(index, "title", e.target.value)
+                  }
+                  disabled={!formEditable}
+                  className={
+                    "mb-2 disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+                  }
+                />
+
+                <Label>Abstract:</Label>
+                <Input
+                  type="text"
+                  placeholder="Enter the abstract"
+                  value={paper.abstract}
+                  onChange={(e) =>
+                    handleResearchPaperChange(index, "abstract", e.target.value)
                   }
                   disabled={!formEditable}
                   className={
@@ -196,7 +263,44 @@ const ResearchAndPublications = () => {
                   }
                 />
 
-                <div>Number of citations (updated automatically)</div>
+                <Label>Publication Type:</Label>
+                <Select
+                  value={paper.publicationType}
+                  onValueChange={(value) =>
+                    handleResearchPaperChange(index, "publicationType", value)
+                  }
+                  disabled={!formEditable}
+                >
+                  <SelectTrigger
+                    className={`w-full ${!formEditable ? "disabled:bg-gray-300 disabled:text-black disabled:opacity-100" : ""}`}
+                  >
+                    <SelectValue placeholder="Select Publication Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="journal">Journal</SelectItem>
+                    <SelectItem value="conference">Conference</SelectItem>
+                    <SelectItem value="book">Book</SelectItem>
+                    <SelectItem value="other">Other</SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <Label>Number of Citations:</Label>
+                <Input
+                  type="text"
+                  placeholder="Enter number of citations(current)"
+                  value={paper.numberOfCitations}
+                  onChange={(e) =>
+                    handleResearchPaperChange(
+                      index,
+                      "numberOfCitations",
+                      e.target.value,
+                    )
+                  }
+                  disabled={!formEditable}
+                  className={
+                    "mb-2 disabled:bg-gray-300 disabled:text-black disabled:opacity-100"
+                  }
+                />
               </CardContent>
               <CardFooter>
                 {formEditable && (
@@ -205,7 +309,7 @@ const ResearchAndPublications = () => {
                     onClick={() => handleDeleteResearchPaper(index)}
                     className="text-white w-[200px] mx-auto bg-red-500 mb-3"
                   >
-                    Delete Lecture
+                    Delete Research Paper
                   </Button>
                 )}{" "}
               </CardFooter>

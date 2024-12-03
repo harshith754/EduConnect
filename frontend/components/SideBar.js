@@ -85,11 +85,12 @@ const SideBar = () => {
                 Professional Details
               </div>
               <div
-                className={`p-2 ${selectedTab === "books-published" ? "font-bold" : ""}`}
-                onClick={() => handleAccordionClick("books-published")}
+                className={`p-2 ${selectedTab === "research-paper" ? "font-bold" : ""}`}
+                onClick={() => handleAccordionClick("research-paper")}
               >
-                Books Published
+                Research Paper Information
               </div>
+
               <div
                 className={`p-2 ${selectedTab === "patents-registered" ? "font-bold" : ""}`}
                 onClick={() => handleAccordionClick("patents-registered")}
@@ -109,10 +110,10 @@ const SideBar = () => {
                 Guest Lecture/Expert Lecture Delivered
               </div>
               <div
-                className={`p-2 ${selectedTab === "research-paper" ? "font-bold" : ""}`}
-                onClick={() => handleAccordionClick("research-paper")}
+                className={`p-2 ${selectedTab === "books-published" ? "font-bold" : ""}`}
+                onClick={() => handleAccordionClick("books-published")}
               >
-                Research Paper Information
+                Books Published
               </div>
               <div
                 className={`p-2 ${selectedTab === "financial-support" ? "font-bold" : ""}`}
@@ -120,12 +121,7 @@ const SideBar = () => {
               >
                 Financial Support for Conferences/Workshops
               </div>
-              {/* <div
-                className={`p-2 ${selectedTab === "teachers-fdp" ? "font-bold" : ""}`}
-                onClick={() => handleAccordionClick("teachers-fdp")}
-              >
-                Teachers Undergoing FDPs/MDPs
-              </div> */}
+
               <div
                 className={`p-2 ${selectedTab === "granted-fellowship" ? "font-bold" : ""}`}
                 onClick={() => handleAccordionClick("granted-fellowship")}

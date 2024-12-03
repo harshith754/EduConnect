@@ -30,6 +30,7 @@ export const authOptions = {
             name: existingUser.name,
             email: existingUser.email,
             role: existingUser.role,
+            authorId: existingUser.authorId || "",
           };
         } catch (error) {
           console.log("Error: ", error);
@@ -42,6 +43,7 @@ export const authOptions = {
       if (user) {
         token.id = user.id;
         token.role = user.role;
+        token.authorId = user.authorId;
       }
       return token;
     },
@@ -49,6 +51,7 @@ export const authOptions = {
       if (session?.user) {
         session.user.id = token.id;
         session.user.role = token.role;
+        session.user.authorId = token.authorId;
       }
       return session;
     },

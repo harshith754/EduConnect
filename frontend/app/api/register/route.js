@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 
 export async function POST(req) {
   try {
-    const { name, email, password } = await req.json();
+    const { name, email, password, instituteName } = await req.json();
     const hashedPassword = await bcrypt.hash(password, 10);
 
     //check if email exists
@@ -25,6 +25,7 @@ export async function POST(req) {
         name,
         email,
         password: hashedPassword,
+        instituteName,
       },
     });
 

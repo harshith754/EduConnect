@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Progress } from "./ui/progress";
-import { Check, CircleCheckBig, CircleOff, X } from "lucide-react";
+import { IEEEImport } from "./IEEEImport";
 
 const Dashboard = () => {
   const [categories, setCategories] = useState({
@@ -30,7 +30,9 @@ const Dashboard = () => {
 
   return (
     <div className="flex flex-col px-6 py-3">
-      <h2 className="text-lg font-bold mb-4">Your Profile Progress</h2>
+      <IEEEImport />
+
+      {/* <h2 className="text-lg font-bold mb-4">Your Profile Progress</h2>
       <div className="flex flex-col w-[80%]">
         <div className="flex flex-row justify-between px-1">
           <span className="text-sm text-gray-600">Profile Completeness:</span>
@@ -61,7 +63,7 @@ const Dashboard = () => {
             ))}
           </ul>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -21,7 +21,8 @@ model User {
   role                String               @default("regular")
   createdAt           DateTime?            @default(now())
   updatedAt           DateTime?            @updatedAt
-  instituteName       String?
+  instituteName       String?              @default("SPIT")
+  IEEEAuthorId        String?
   personalDetails     PersonalDetails?
   professionalDetails ProfessionalDetails?
   booksPublished      BooksPublished?
@@ -201,10 +202,12 @@ model Lecture {
 }
 
 model PapersPublished {
-  id     Int     @id @default(autoincrement())
-  user   User    @relation(fields: [email], references: [email])
-  email  String  @unique
-  papers Paper[]
+  id             Int     @id @default(autoincrement())
+  user           User    @relation(fields: [email], references: [email])
+  email          String  @unique
+  papers         Paper[]
+  totalCitations Int?
+  totalArticles  Int?
 }
 
 model Paper {
@@ -216,7 +219,8 @@ model Paper {
   linkToArticle     String?
   numberOfCitations String?
   PapersPublished   PapersPublished? @relation(fields: [papersPublishedId], references: [id])
-  papersPublishedId Int?
+  papersPublishedId Int?             @default(0)
+  abstract          String?          @default("")
   isConference      Boolean?         @default(true)
   isJournal         Boolean?         @default(false)
   isBook            Boolean?         @default(false)

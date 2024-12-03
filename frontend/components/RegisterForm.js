@@ -11,6 +11,8 @@ const RegisterForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [instituteName, setInstituteName] = useState("");
+
   const [error, setError] = useState("");
 
   const router = useRouter();
@@ -30,6 +32,7 @@ const RegisterForm = () => {
         name,
         email,
         password,
+        instituteName,
       });
 
       console.log(res);
@@ -64,6 +67,11 @@ const RegisterForm = () => {
               onChange={(e) => setEmail(e.target.value)}
               type="text"
               placeholder="Email"
+            />
+            <Input
+              onChange={(e) => setInstituteName(e.target.value)}
+              type="text"
+              placeholder="Institute Name (SPIT/Other) "
             />
             <Input
               onChange={(e) => setPassword(e.target.value)}
