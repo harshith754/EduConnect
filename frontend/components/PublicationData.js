@@ -1,7 +1,7 @@
 import React from "react";
 import PublicationCharts from "./PublicationCharts";
 
-export const PublicationData = ({ data }) => {
+export const PublicationData = ({ data, showAuthor = true }) => {
   if (!data || data.length === 0) return null;
   const publicationInfo = data[0];
   const pInfoF = {
@@ -18,7 +18,11 @@ export const PublicationData = ({ data }) => {
 
   return (
     <div>
-      <h2 className="text-xl font-bold mb-4">Author: {pInfoF.preferredName}</h2>
+      {showAuthor && (
+        <h2 className="text-xl font-bold mb-4">
+          Author: {pInfoF.preferredName}
+        </h2>
+      )}
       <PublicationCharts
         publicationData={pInfoF.publicationYearDetails}
         topicsDataU={pInfoF.topics}

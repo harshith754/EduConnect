@@ -24,6 +24,8 @@ import { Button } from "./ui/button";
 import { Checkbox } from "./ui/checkbox";
 import ProfileDownload from "./ProfileDownload";
 import { Spinner } from "./Spinner";
+import { IEEEImport } from "./IEEEImport";
+import { IEEEbasic } from "./IEEEbasic";
 
 export const UserProfile = ({ userEmail = "" }) => {
   const { data: session } = useSession();
@@ -118,6 +120,8 @@ export const UserProfile = ({ userEmail = "" }) => {
           Reset Selections
         </Button>
       </h2>
+
+      <IEEEbasic />
 
       {/* <div className=" w-[60%] bg-gray-400">
         {JSON.stringify(facultyDetails)}
