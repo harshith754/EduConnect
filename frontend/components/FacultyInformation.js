@@ -16,9 +16,9 @@ export const FacultyInformation = () => {
 
   const { data: session } = useSession();
 
-  if (session?.user?.role !== "admin") {
-    return <div>Only accessable to admins.</div>;
-  }
+  // if (session?.user?.role !== "admin") {
+  //   return <div>Only accessable to admins.</div>;
+  // }
   const availableFields = [
     {
       title: "User",
@@ -52,7 +52,7 @@ export const FacultyInformation = () => {
     },
     {
       title: "BooksPublished",
-      fields: ["title", "publishers", "yearOfPublication", "dateOfPublication"],
+      fields: ["title", "authors", "linkToArticle","publishers", "yearOfPublication", "dateOfPublication","abstract"],
     },
     {
       title: "PatentsRegistered",
