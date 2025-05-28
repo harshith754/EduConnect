@@ -68,20 +68,25 @@ const ExcelDownload = ({ jsonData }) => {
       let isPushed = false;
 
       // Extract books
-      if (item.booksPublished?.books) {
-        item.booksPublished.books.forEach((book) => {
+      if (item.papersPublished?.papers) {
+        item.papersPublished.papers.forEach((paper) => {
           const rowData = {
             ...personalDetails,
             ...professionalDetails,
             ...counts,
           };
 
-          if (book.title) rowData.Title = book.title;
-          if (book.publishers) rowData.Publishers = book.publishers;
-          if (book.yearOfPublication)
-            rowData.YearOfPublication = book.yearOfPublication;
-          if (book.dateOfPublication)
-            rowData.DateOfPublication = book.dateOfPublication;
+          if (paper.title) rowData.Title = paper.title;
+          if (paper.publishers) rowData.Publishers = paper.publishers;
+          if (paper.yearOfPublication)
+            rowData.YearOfPublication = paper.yearOfPublication;
+          if (paper.dateOfPublication)
+            rowData.DateOfPublication = paper.dateOfPublication;
+
+          if (paper.numberOfCitations)
+            rowData.NumberOfCitations = paper.numberOfCitations;
+
+          if (paper.abstract) rowData.Abstract = paper.abstract;
 
           data.push(rowData);
           isPushed = true;

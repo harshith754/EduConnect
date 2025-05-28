@@ -51,8 +51,8 @@ export const FacultyInformation = () => {
       ],
     },
     {
-      title: "BooksPublished",
-      fields: ["title", "authors", "linkToArticle","publishers", "yearOfPublication", "dateOfPublication","abstract"],
+      title: "PapersPublished",
+      fields: ["title", "authors", "yearOfPublication", "dateOfPublication","abstract","isConference","isJournal","isBook"],
     },
     {
       title: "PatentsRegistered",
