@@ -52,7 +52,7 @@ export const FacultyInformation = () => {
     },
     {
       title: "PapersPublished",
-      fields: ["title", "authors", "yearOfPublication", "dateOfPublication","abstract","isConference","isJournal","isBook"],
+      fields: ["title", "authors", "yearOfPublication", "dateOfPublication","abstract"],
     },
     {
       title: "PatentsRegistered",
