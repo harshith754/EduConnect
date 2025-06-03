@@ -1,3 +1,13 @@
+# EduConnect ERP
+
+EduConnect is an ERP platform designed for colleges to efficiently manage faculty portfolios and publication records. With EduConnect, institutions can:
+
+- Track and manage faculty achievements and publication data.
+- Visualize trends in publications and research output through interactive graphs.
+- Download comprehensive, dynamic reports and faculty portfolios for documentation or review.
+- Access the platform securely from anywhere.
+- Manually create and customize reports and portfolios for download, tailored to specific needs.
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started

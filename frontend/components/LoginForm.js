@@ -27,7 +27,6 @@ export default function LoginForm() {
 
       if (res.error) {
         setError("Invalid Credentials");
-        console.log(error);
         return;
       }
 
@@ -38,33 +37,83 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="grid place-items-center h-screen">
-      <div className="shadow-lg rounded-lg border-t-4 border-primary  px-[60px] py-11 ">
-        <h1 className="text-xl font-bold my-4">Login</h1>
-
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3 ">
-          <Input
-            onChange={(e) => setEmail(e.target.value)}
-            type="text"
-            placeholder="Email"
-          />
-          <Input
-            onChange={(e) => setPassword(e.target.value)}
-            type="password"
-            placeholder="Password"
-            className="w-[280px]"
-          />
-          <Button className=" text-white px-6 py-2">Login</Button>
-          {error && (
-            <div className="bg-red-500 text-white w-fit text-sm py-1 px-3 rounded-md mt-2">
-              {error}
-            </div>
-          )}
-
-          <Link className="text-sm mt-3 text-center" href={"/register"}>
-            Don't have an account? <span className="underline">Register</span>
-          </Link>
-        </form>
+    <div className="relative min-h-screen flex items-center justify-center w-full">
+      <div className="absolute inset-0 z-0">
+        <img
+          src="/seminar-designers.jpg"
+          alt="Seminar"
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black bg-opacity-60" />
+      </div>
+      {/* Content */}
+      <div className="relative z-10 flex flex-col md:flex-row items-center gap-12 max-w-5xl w-full px-4">
+        {/* Info Section */}
+        <div className="flex-1 mb-10 md:mb-0">
+          <div className="bg-white/80 backdrop-blur-md rounded-xl p-8 shadow-lg">
+            <p className="text-xl md:text-5xl font-semibold text-primary drop-shadow mb-6">
+              Welcome to EduConnect ERP
+            </p>
+            <p className="text-md text-gray-800 font-light mb-4 drop-shadow">
+              EduConnect is a modern ERP platform for colleges to manage faculty
+              portfolios and publication records.
+              <br />
+             
+            </p>
+             <span className="font-semibold text-primary">Features:</span>
+            <ul className="list-disc ml-6 text-base text-gray-800 font-light mb-6 drop-shadow">
+              <li>Track and manage faculty achievements and publications</li>
+              <li>Visualize trends with interactive graphs</li>
+              <li>Download comprehensive and dynamic reports</li>
+              <li>Access securely from anywhere</li>
+              <li>Manually create and customize faculty portfolios</li>
+            </ul>
+            <p className="text-base text-gray-700 font-light drop-shadow">
+              Get started by logging in or registering a new account.
+            </p>
+          </div>
+        </div>
+        {/* Login Form Section */}
+        <div className="flex-1">
+          <div className="shadow-2xl rounded-2xl border-t-4 border-primary bg-white/90 px-10 py-12 w-full max-w-md mx-auto backdrop-blur">
+            <h2 className="text-2xl font-bold text-center text-primary mb-6">
+              Login to EduConnect
+            </h2>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+              <Input
+                onChange={(e) => setEmail(e.target.value)}
+                type="email"
+                placeholder="Email"
+                className="h-12 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                required
+              />
+              <Input
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                placeholder="Password"
+                className="h-12 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
+                required
+              />
+              <Button className="bg-primary hover:bg-primary-dark text-white font-semibold py-3 rounded-lg transition-colors">
+                Login
+              </Button>
+              {error && (
+                <div className="bg-red-500 text-white text-center text-sm py-2 px-4 rounded-md mt-2">
+                  {error}
+                </div>
+              )}
+              <div className="text-center mt-2">
+                <Link
+                  className="text-sm text-primary hover:underline"
+                  href={"/register"}
+                >
+                  Don't have an account?{" "}
+                  <span className="underline">Register</span>
+                </Link>
+              </div>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   );
